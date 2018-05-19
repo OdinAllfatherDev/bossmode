@@ -23,8 +23,6 @@ import java.util.List;
  */
 public class ListenerChat implements Listener {
 
-    public String test;
-
     private final HashMap<Player, List<String>> specialAttackMesasges = new HashMap<>();
 
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -408,13 +406,13 @@ public class ListenerChat implements Listener {
                 player.openInventory(BossMode.getInstance().getInventoryStorage()
                         .bossSettings(BossMode.getInstance().getBossManager().getBossEditor(player).isNaturalSpawn()));
                 BossMode.getInstance().getBossManager().getChatCommand().remove(player);
-            } else if(cc.equals(BossManager.CHAT_COMMAND_SPAWN_CHANCE_RANDOM_SPAWN)) {
+            } else if (cc.equals(BossManager.CHAT_COMMAND_SPAWN_CHANCE_RANDOM_SPAWN)) {
                 int r = parseInt(event.getMessage());
-                if(r > 100)
+                if (r > 100)
                     r = 100;
-                if(r < 0)
+                if (r < 0)
                     r = 0;
-                if(r == -1) {
+                if (r == -1) {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     event.setCancelled(true);
                     return;
