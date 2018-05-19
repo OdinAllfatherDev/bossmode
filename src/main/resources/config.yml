@@ -1,0 +1,25 @@
+#################################################
+#            BossMode by EncryptDev             #
+#   Help? Discord: https://discord.gg/NUPDFR7   #
+#   Or write me a Email: encryptdev@gmail.com   #
+#################################################
+#This is the amount of all bosses
+bossId: 0
+livingBossId: 0
+#When the player load a chunk (go in the near from the chunk) then spawn the boss, if the biome is right
+#false = off; true = on
+bossSpawnByChunkLoading: true
+#This is the ticks for the special attacks
+#all 400 ticks (20 seconds) a boss take a special attack
+specialAttackTicks: 400
+#If this is true (on) then spawns the boss natural, when the plugin started
+spawnByStartNatural: true
+#This is the alert when a boss spawn
+alert: false
+#This is the radius in block where get the alert
+alertRad: 5
+#Configurate the alert message.
+#%BossName% would replaced with the boss name
+alertMessage: "&4%BossName% spawned"
+#Change the message structure for the message special attack
+bossMessage: "&7[%BossName%] &e> %Message%"
