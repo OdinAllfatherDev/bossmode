@@ -2,6 +2,7 @@ package de.encryptdev.bossmode.boss.path;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.ref.Reflection;
+import net.minecraft.server.v1_12_R1.EntitySpider;
 
 /**
  * Created by EncryptDev
@@ -61,6 +62,11 @@ public class PathfinderCreator extends Reflection {
     public Object createPathfinderGoalMoveTowardsRestriction(Object entityCreature) {
         return getNewInstanceConstructor(getNMSClass("PathfinderGoalMoveTowardsRestriction"), new Class<?>[]{entityCreatureClass, double.class},
                 new Object[]{entityCreature, 1.0D});
+    }
+
+    public Object createPathfinderNearestAttackableTargetSpider(Object entitySpider) {
+        return getNewInstanceConstructor(getNMSClass("PathfinderGoalSpiderNearestAttackableTarget"), new Class<?>[]{entitySpider.getClass(), Class.class},
+                new Object[]{entitySpider, getNMSClass("EntityHuman")});
     }
 
     public Object createPathfinderGoalRandomStrollLand(Object entityCreature) {

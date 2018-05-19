@@ -67,9 +67,10 @@ public class BossPathfinderEdited extends Reflection {
             targetSelectorR(1, pathfinderCreator.createPathfinderGoalNearestAttackableTarget(handleLivingEntity, getNMSClass("EntityHuman")));
 
             if (nearAttackEntities.isEmpty()) {
-                if (handleLivingEntity.getClass().equals(getNMSClass("EntitySpider")) || handleLivingEntity.getClass().equals("EntityCaveSpider"))
+                if (handleLivingEntity.getClass().equals(getNMSClass("EntitySpider")) || handleLivingEntity.getClass().equals("EntityCaveSpider")) {
                     goalSelectorR(2, pathfinderCreator.createPafhinderGoalMeleeAttackSpider(handleLivingEntity));
-                else if (handleLivingEntity.getClass().equals(getNMSClass("EntitySkeleton")))
+                    targetSelectorR(2, pathfinderCreator.createPathfinderNearestAttackableTargetSpider(handleLivingEntity));
+                } else if (handleLivingEntity.getClass().equals(getNMSClass("EntitySkeleton")))
                     goalSelectorR(2, pathfinderCreator.createPathfinderGoalArrowAttack(handleLivingEntity, iBoss.getBossSettings().getSpeed()));
                 else if (handleLivingEntity.getClass().equals(getNMSClass("EntityCreeper")))
                     goalSelectorR(2, pathfinderCreator.createPatfhinderCreeper(handleLivingEntity));
@@ -82,6 +83,10 @@ public class BossPathfinderEdited extends Reflection {
 
                 for (int i = 0; i < nearAttackEntities.size(); i++) {
                     try {
+                        if (handleLivingEntity.getClass().equals(getNMSClass("EntitySpider")) || handleLivingEntity.getClass().equals("EntityCaveSpider")) {
+                            targetSelectorR(s++, pathfinderCreator.createPathfinderNearestAttackableTargetSpider(handleLivingEntity));
+                            continue;
+                        }
                         targetSelectorR(s++, pathfinderCreator.createPathfinderGoalNearestAttackableTarget(handleLivingEntity, Class.forName(nearAttackEntities.get(i))));
                         goalSelectorR(s++, pathfinderCreator.createPathfinderGoalMeleeAttack(handleLivingEntity, Class.forName(nearAttackEntities.get(i)), iBoss.getBossSettings().getSpeed()));
                     } catch (ClassNotFoundException e) {
@@ -101,9 +106,10 @@ public class BossPathfinderEdited extends Reflection {
             targetC.clear();
 
             goalSelectorR(0, pathfinderCreator.createPathfinderGoalFloat(handleLivingEntity));
-            if (handleLivingEntity.getClass().equals(getNMSClass("EntitySpider")) || handleLivingEntity.getClass().equals("EntityCaveSpider"))
+            if (handleLivingEntity.getClass().equals(getNMSClass("EntitySpider")) || handleLivingEntity.getClass().equals("EntityCaveSpider")) {
                 goalSelectorR(2, pathfinderCreator.createPafhinderGoalMeleeAttackSpider(handleLivingEntity));
-            else if (handleLivingEntity.getClass().equals(getNMSClass("EntitySkeleton")))
+                targetSelectorR(2, pathfinderCreator.createPathfinderNearestAttackableTargetSpider(handleLivingEntity));
+            } else if (handleLivingEntity.getClass().equals(getNMSClass("EntitySkeleton")))
                 goalSelectorR(2, pathfinderCreator.createPathfinderGoalArrowAttack(handleLivingEntity, iBoss.getBossSettings().getSpeed()));
             else if (handleLivingEntity.getClass().equals(getNMSClass("EntityCreeper")))
                 goalSelectorR(2, pathfinderCreator.createPatfhinderCreeper(handleLivingEntity));
@@ -118,12 +124,17 @@ public class BossPathfinderEdited extends Reflection {
             targetSelectorR(3, pathfinderCreator.createPathfinderGoalNearestAttackableTarget(handleLivingEntity, getNMSClass("EntityHuman")));
             if (!nearAttackEntities.isEmpty()) {
                 int s = 4;
-                for (int i = 0; i < nearAttackEntities.size(); i++)
+                for (int i = 0; i < nearAttackEntities.size(); i++) {
+                    if (handleLivingEntity.getClass().equals(getNMSClass("EntitySpider")) || handleLivingEntity.getClass().equals("EntityCaveSpider")) {
+                        targetSelectorR(s++, pathfinderCreator.createPathfinderNearestAttackableTargetSpider(handleLivingEntity));
+                        continue;
+                    }
                     try {
                         targetSelectorR(s++, pathfinderCreator.createPathfinderGoalNearestAttackableTarget(handleLivingEntity, Class.forName(nearAttackEntities.get(i))));
                     } catch (ClassNotFoundException e) {
                         e.printStackTrace();
                     }
+                }
             }
         }
     }

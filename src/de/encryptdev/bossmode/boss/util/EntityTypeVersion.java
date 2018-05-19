@@ -337,8 +337,9 @@ public class EntityTypeVersion {
         }
     }
 
+
     //Size: 8
-    public static final EntityTypeVersion[] BOSS_MONSTER = {ZOMBIE, SKELETON, CREEPER, ENDERMAN, PIG_ZOMBIE, SPIDER, CAVE_SPIDER, GIANT, WITCH};
+    public static final EntityTypeVersion[] BOSS_MONSTER = {ZOMBIE, SKELETON, CREEPER, ENDERMAN, PIG_ZOMBIE, SPIDER, CAVE_SPIDER, GIANT};
 
     //Size: 32
     public static final EntityTypeVersion[] V1_8 = {CREEPER, SKELETON, SPIDER, GIANT, ZOMBIE, SLIME, GHAST, PIG_ZOMBIE, ENDERMAN, CAVE_SPIDER, SILVERFISH,
