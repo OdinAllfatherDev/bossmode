@@ -1,0 +1,7 @@
+name: BossMode
+author: EncryptDev
+version: 1.0.6
+main: de.encryptdev.bossmode.BossMode
+
+commands:
+  boss:
