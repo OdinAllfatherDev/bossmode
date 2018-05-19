@@ -29,9 +29,7 @@ public class BossSettings {
     private int bossId;
     private LivingEntity bossEntity;
     private double maxHealth;
-    private ItemStack[] armor;
-    private ItemStack weaponMainHand;
-    private ItemStack weaponSecondHand;
+    private BossEquipment equipment;
     private float dropChanceWeaponMainHand;
     private float dropChanceWeaponSecondHand;
     private float damage;
@@ -53,17 +51,14 @@ public class BossSettings {
     private boolean lookAtPlayer;
     private boolean is1_8;
 
-    public BossSettings(int bossId, double maxHealth, ItemStack[] armor, ItemStack weaponMainHand,
-                        ItemStack weaponSecondHand,
+    public BossSettings(int bossId, double maxHealth, BossEquipment equipment,
                         float dropChanceWeaponMainHand, float dropChanceWeaponSecondHand, List<ItemStack> naturalDrops, float damage,
                         float chanceToSpawn, double speed, int spawnAmount, float chanceToSpawnBySpawnEntity,
                         double nearbyRad, double spawnRadius, int droppedXp,
                         List<PotionEffect> potionEffects, Biome biome, List<SpecialAttack> specialAttacks, List<String> nearAttackEntities, boolean lookAtPlayer) {
         this.bossId = bossId;
         this.maxHealth = maxHealth;
-        this.armor = armor;
-        this.weaponMainHand = weaponMainHand;
-        this.weaponSecondHand = weaponSecondHand;
+        this.equipment = equipment;
         this.dropChanceWeaponMainHand = dropChanceWeaponMainHand;
         this.dropChanceWeaponSecondHand = dropChanceWeaponSecondHand;
         this.naturalDrops = naturalDrops;
@@ -89,33 +84,33 @@ public class BossSettings {
         Entity spawned = location.getWorld().spawnEntity(location, type);
         bossEntity = (LivingEntity) spawned;
 
-        if (armor != null) {
-            if (armor[0] != null)
-                bossEntity.getEquipment().setHelmet(armor[0]);
+        if (equipment != null) {
+            if (equipment.getHelmet() != null)
+                bossEntity.getEquipment().setHelmet(equipment.getHelmet());
 
-            if (armor[1] != null)
-                bossEntity.getEquipment().setChestplate(armor[1]);
+            if (equipment.getChestplate() != null)
+                bossEntity.getEquipment().setChestplate(equipment.getChestplate());
 
-            if (armor[2] != null)
-                bossEntity.getEquipment().setLeggings(armor[2]);
+            if (equipment.getLeggings() != null)
+                bossEntity.getEquipment().setLeggings(equipment.getLeggings());
 
-            if (armor[3] != null)
-                bossEntity.getEquipment().setBoots(armor[3]);
+            if (equipment.getBoots() != null)
+                bossEntity.getEquipment().setBoots(equipment.getBoots());
         }
 
-        if (weaponMainHand != null) {
+        if (equipment.getMainHand() != null) {
             if (!is1_8) {
-                bossEntity.getEquipment().setItemInMainHand(weaponMainHand);
+                bossEntity.getEquipment().setItemInMainHand(equipment.getMainHand());
                 bossEntity.getEquipment().setItemInMainHandDropChance(dropChanceWeaponMainHand);
             } else {
-                bossEntity.getEquipment().setItemInHand(weaponMainHand);
+                bossEntity.getEquipment().setItemInHand(equipment.getMainHand());
             }
         }
 
 
-        if (weaponMainHand != null) {
+        if (equipment.getOffHand() != null) {
             if (!is1_8) {
-                bossEntity.getEquipment().setItemInOffHand(weaponSecondHand);
+                bossEntity.getEquipment().setItemInOffHand(equipment.getOffHand());
                 bossEntity.getEquipment().setItemInOffHandDropChance(dropChanceWeaponMainHand);
             }
         }
@@ -152,6 +147,10 @@ public class BossSettings {
         bossEntity.setMetadata(META_DATA_BOSS_POTION, new FixedMetadataValue(BossMode.getInstance(), potionEffectList));
 
         return bossEntity;
+    }
+
+    public BossEquipment getEquipment() {
+        return equipment;
     }
 
     public boolean isLookAtPlayer() {
@@ -225,18 +224,6 @@ public class BossSettings {
 
     public double getMaxHealth() {
         return maxHealth;
-    }
-
-    public ItemStack getWeaponMainHand() {
-        return weaponMainHand;
-    }
-
-    public ItemStack getWeaponSecondHand() {
-        return weaponSecondHand;
-    }
-
-    public ItemStack[] getArmor() {
-        return armor;
     }
 
     public float getDamage() {

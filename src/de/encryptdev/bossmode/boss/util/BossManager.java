@@ -113,16 +113,16 @@ public class BossManager {
         fileManager.set("has_spawner", boss.hasSpawner());
         fileManager.set("biome", boss.getBossSettings().getBiome() == null ? null : boss.getBossSettings().getBiome().name());
 
-        if (boss.getBossSettings().getArmor() != null) {
-            fileManager.set("equipment.armor.helmet", boss.getBossSettings().getArmor()[0]);
-            fileManager.set("equipment.armor.chestplate", boss.getBossSettings().getArmor()[1]);
-            fileManager.set("equipment.armor.leggings", boss.getBossSettings().getArmor()[2]);
-            fileManager.set("equipment.armor.boots", boss.getBossSettings().getArmor()[3]);
+        if (boss.getBossSettings().getEquipment() != null) {
+            fileManager.set("equipment.armor.helmet", boss.getBossSettings().getEquipment().getHelmet());
+            fileManager.set("equipment.armor.chestplate", boss.getBossSettings().getEquipment().getChestplate());
+            fileManager.set("equipment.armor.leggings", boss.getBossSettings().getEquipment().getLeggings());
+            fileManager.set("equipment.armor.boots", boss.getBossSettings().getEquipment().getBoots());
         }
 
-        fileManager.set("equipment.hand.main", boss.getBossSettings().getWeaponMainHand());
+        fileManager.set("equipment.hand.main", boss.getBossSettings().getEquipment().getMainHand());
         fileManager.set("equipment.hand.main_drop", boss.getBossSettings().getDropChanceWeaponMainHand());
-        fileManager.set("equipment.hand.off", boss.getBossSettings().getWeaponSecondHand());
+        fileManager.set("equipment.hand.off", boss.getBossSettings().getEquipment().getOffHand());
         fileManager.set("equipment.hand.off_drop", boss.getBossSettings().getDropChanceWeaponSecondHand());
         fileManager.set("natural_drops", boss.getBossSettings().getNaturalDrops());
         fileManager.set("damage", boss.getBossSettings().getDamage());
@@ -251,16 +251,10 @@ public class BossManager {
             int bossId = fileManager.get("boss_id", int.class);
             String worldName = fileManager.get("world_name", String.class);
             double maxHealth = fileManager.get("max_health", double.class);
-            ItemStack[] armor = new ItemStack[4];
             ItemStack helmet = fileManager.get("equipment.armor.helmet", ItemStack.class);
             ItemStack chestplate = fileManager.get("equipment.armor.chestplate", ItemStack.class);
             ItemStack leggings = fileManager.get("equipment.armor.leggings", ItemStack.class);
             ItemStack boots = fileManager.get("equipment.armor.boots", ItemStack.class);
-            armor[0] = helmet;
-            armor[1] = chestplate;
-            armor[2] = leggings;
-            armor[3] = boots;
-
             ItemStack weaponMainHand = fileManager.get("equipment.hand.main", ItemStack.class);
             ItemStack weaponSecondHand = fileManager.get("equipment.hand.off", ItemStack.class);
 
@@ -332,7 +326,9 @@ public class BossManager {
             }
             List<PotionEffect> potionEffects = fileManager.get("potioneffects", List.class);
 
-            BossSettings settings = new BossSettings(bossId, maxHealth, armor, weaponMainHand, weaponSecondHand,
+            BossEquipment bossEquipment = new BossEquipment(helmet, chestplate, leggings, boots, weaponMainHand, weaponSecondHand);
+
+            BossSettings settings = new BossSettings(bossId, maxHealth, bossEquipment,
                     (float) weaponMainHandDropChance, (float) weaponSecondHandDropChance,
                     naturalDrops, (float) damage, (float) chanceToSpawn, speed, spawnAmount, (float) chanceToSpawnByEntitySpawn,
                     nearbyRad, spawnRadius, droppexXp, potionEffects, biome, specialAttacks, nearEntities, lookAtPlayer);

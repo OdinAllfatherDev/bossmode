@@ -4,6 +4,7 @@ import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
+import de.encryptdev.bossmode.boss.util.BossEquipment;
 import de.encryptdev.bossmode.boss.util.BossSettings;
 import de.encryptdev.bossmode.boss.util.BossUtil;
 import org.bukkit.Bukkit;
@@ -186,14 +187,16 @@ public class CommandBoss extends ACommand {
                     for(String str : nearEntities)
                         player.sendMessage(BossMode.PREFIX + " -> §a" + str.replace(".", ",").split(",")[4].replace("Entity", ""));
 
-                player.sendMessage(BossMode.PREFIX + "MainHand: §a" + (boss.getBossSettings().getWeaponMainHand() == null ? "/" : BossUtil.makeEnumNameNormal(boss.getBossSettings().getWeaponMainHand().getType())));
+                BossEquipment equipment = boss.getBossSettings().getEquipment();
+
+                player.sendMessage(BossMode.PREFIX + "MainHand: §a" + (equipment.getMainHand() == null ? "/" : BossUtil.makeEnumNameNormal(equipment.getMainHand().getType())));
                 player.sendMessage(BossMode.PREFIX + "DropChance: §a" + boss.getBossSettings().getDropChanceWeaponMainHand());
-                player.sendMessage(BossMode.PREFIX + "OffHand: §a" + (boss.getBossSettings().getWeaponSecondHand() == null ? "/" : BossUtil.makeEnumNameNormal(boss.getBossSettings().getWeaponSecondHand().getType())));
+                player.sendMessage(BossMode.PREFIX + "OffHand: §a" + (equipment.getOffHand() == null ? "/" : BossUtil.makeEnumNameNormal(equipment.getOffHand().getType())));
                 player.sendMessage(BossMode.PREFIX + "DropChance: §a" + boss.getBossSettings().getDropChanceWeaponSecondHand());
-                player.sendMessage(BossMode.PREFIX + "Helmet: §a" + (boss.getBossSettings().getArmor()[0] == null ? "/" : BossUtil.makeEnumNameNormal(boss.getBossSettings().getArmor()[0].getType())));
-                player.sendMessage(BossMode.PREFIX + "Chestplate: §a" + (boss.getBossSettings().getArmor()[1] == null ? "/" : BossUtil.makeEnumNameNormal(boss.getBossSettings().getArmor()[1].getType())));
-                player.sendMessage(BossMode.PREFIX + "Leggings: §a" + (boss.getBossSettings().getArmor()[2] == null ? "/" : BossUtil.makeEnumNameNormal(boss.getBossSettings().getArmor()[2].getType())));
-                player.sendMessage(BossMode.PREFIX + "Boots: §a" + (boss.getBossSettings().getArmor()[3] == null ? "/" : BossUtil.makeEnumNameNormal(boss.getBossSettings().getArmor()[3].getType())));
+                player.sendMessage(BossMode.PREFIX + "Helmet: §a" + (equipment.getHelmet() == null ? "/" : BossUtil.makeEnumNameNormal(equipment.getHelmet().getType())));
+                player.sendMessage(BossMode.PREFIX + "Chestplate: §a" + (equipment.getChestplate() == null ? "/" : BossUtil.makeEnumNameNormal(equipment.getChestplate().getType())));
+                player.sendMessage(BossMode.PREFIX + "Leggings: §a" + (equipment.getLeggings() == null ? "/" : BossUtil.makeEnumNameNormal(equipment.getLeggings().getType())));
+                player.sendMessage(BossMode.PREFIX + "Boots: §a" + (equipment.getBoots() == null ? "/" : BossUtil.makeEnumNameNormal(equipment.getBoots().getType())));
 
 
             } else if(args[0].equalsIgnoreCase("delete")) {

@@ -26,9 +26,7 @@ public class BossEditor {
     private String name;
     private double maxHealth;
     private double damage;
-    private ItemStack[] armor;
-    private ItemStack mainHand;
-    private ItemStack offHand;
+    private BossEquipment equipment;
     private List<ItemStack> naturalDrops;
     private float dropChanceMainHand;
     private float dropChanceOffHand;
@@ -48,9 +46,8 @@ public class BossEditor {
     private List<String> nearAttackEntities;
     private boolean lookAtPlayer;
 
-    private BossEditor(int id, IBoss iBoss, EntityType type,
-                       ItemStack[] armor, double speed, String name, double maxHealth,
-                       double damage, ItemStack mainHand, ItemStack offHand, List<ItemStack> naturalDrops,
+    private BossEditor(int id, IBoss iBoss, EntityType type, BossEquipment equipment, double speed, String name, double maxHealth,
+                       double damage, List<ItemStack> naturalDrops,
                        float dropChanceMainHand, float dropChanceOffHand, float chanceToSpawn,
                        int spawnAmount, Location spawnLocation,
                        float chanceToSpawnByEntitySpawn, double nearbyRad,
@@ -59,19 +56,13 @@ public class BossEditor {
         this.id = id;
         this.iBoss = iBoss;
         this.type = type;
-        this.armor = armor;
-        this.armor[0] = iBoss != null ? iBoss.getBossSettings().getArmor()[0] : null;
-        this.armor[1] = iBoss != null ? iBoss.getBossSettings().getArmor()[1] : null;
-        this.armor[2] = iBoss != null ? iBoss.getBossSettings().getArmor()[2] : null;
-        this.armor[3] = iBoss != null ? iBoss.getBossSettings().getArmor()[3] : null;
+        this.equipment = equipment;
         this.speed = speed;
         this.name = name;
         this.maxHealth = maxHealth;
         this.damage = damage;
         this.spawnRadius = spawnRadius;
         this.droppedXp = droppedXp;
-        this.mainHand = mainHand;
-        this.offHand = offHand;
         this.naturalDrops = naturalDrops;
         this.nearbyRad = nearbyRad;
         this.dropChanceMainHand = dropChanceMainHand;
@@ -90,9 +81,8 @@ public class BossEditor {
 
     public BossEditor(IBoss iboss) {
         this(iboss.getBossID(), iboss, iboss.getEntityType(),
-                iboss.getBossSettings().getArmor(), iboss.getBossSettings().getSpeed(),
+                iboss.getBossSettings().getEquipment(), iboss.getBossSettings().getSpeed(),
                 iboss.getBossName(), iboss.getBossSettings().getMaxHealth(), iboss.getBossSettings().getDamage(),
-                iboss.getBossSettings().getWeaponMainHand(), iboss.getBossSettings().getWeaponSecondHand(),
                 iboss.getBossSettings().getNaturalDrops(), iboss.getBossSettings().getDropChanceWeaponMainHand(),
                 iboss.getBossSettings().getDropChanceWeaponSecondHand(), iboss.getBossSettings().getChanceToSpawn(),
                 iboss.getBossSettings().getSpawnAmount(),
@@ -103,9 +93,8 @@ public class BossEditor {
     }
 
     public BossEditor(EntityType type) {
-        this(BossUtil.getBossIds() + 1, null, type, new ItemStack[4], -1,
-                "", 20, 10, null,
-                null, new LinkedList<>(), 1,
+        this(BossUtil.getBossIds() + 1, null, type, new BossEquipment(), -1,
+                "", 20, 10, new LinkedList<>(), 1,
                 1, 1, 20, null,
                 0, 100, 5, 1, new LinkedList<>(), null, new LinkedList<>(),
                 new LinkedList<>(), true);
@@ -151,7 +140,7 @@ public class BossEditor {
         this.damage = damage;
     }
 
-    public void clearPotionEffect(){
+    public void clearPotionEffect() {
         this.potionEffects.clear();
     }
 
@@ -160,31 +149,31 @@ public class BossEditor {
     }
 
     public void setHelmet(ItemStack helmet) {
-        this.armor[0] = helmet;
+        this.equipment.setHelmet(helmet);
     }
 
     public void setChestplate(ItemStack chestplate) {
-        this.armor[1] = chestplate;
+        this.equipment.setChestplate(chestplate);
     }
 
     public void setLeggings(ItemStack leggings) {
-        this.armor[2] = leggings;
+        this.equipment.setLeggings(leggings);
     }
 
     public void setBoots(ItemStack boots) {
-        this.armor[3] = boots;
+        this.equipment.setBoots(boots);
     }
 
     public void setMainHand(ItemStack mainHand) {
-        this.mainHand = mainHand;
+        this.equipment.setMainHand(mainHand);
     }
 
     public void setOffHand(ItemStack offHand) {
-        this.offHand = offHand;
+        this.equipment.setOffHand(offHand);
     }
 
     public void setNaturalDrops(ItemStack naturalDrops) {
-        if(naturalDrops == null)
+        if (naturalDrops == null)
             return;
         this.naturalDrops.add(naturalDrops);
     }
@@ -230,14 +219,14 @@ public class BossEditor {
     }
 
     public boolean addNearEntityClass(String clazz) {
-        if(this.nearAttackEntities.contains(clazz))
+        if (this.nearAttackEntities.contains(clazz))
             return false;
         this.nearAttackEntities.add(clazz);
         return true;
     }
 
     public boolean removeNearEntityClass(String clazz) {
-        if(!this.nearAttackEntities.contains(clazz))
+        if (!this.nearAttackEntities.contains(clazz))
             return false;
         this.nearAttackEntities.remove(clazz);
         return true;
@@ -250,7 +239,7 @@ public class BossEditor {
     public IBoss build() {
 
         BossSettings settings = new BossSettings(id, maxHealth,
-                armor, mainHand, offHand, dropChanceMainHand, dropChanceOffHand, naturalDrops,
+                equipment, dropChanceMainHand, dropChanceOffHand, naturalDrops,
                 (float) damage, chanceToSpawn, speed, spawnAmount, chanceToSpawnByEntitySpawn, nearbyRad,
                 spawnRadius, droppedXp,
                 potionEffects, biome, specialAttacks, nearAttackEntities, lookAtPlayer);

@@ -2,6 +2,7 @@ package de.encryptdev.bossmode.ref;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.IBoss;
+import de.encryptdev.bossmode.boss.util.BossEquipment;
 import de.encryptdev.bossmode.boss.util.BossUtil;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -110,35 +111,37 @@ public class NBTSpawnerUtil extends Reflection {
         Object mainHand = createNBTTagCompound();
         Object offHand = createNBTTagCompound();
 
-        if (boss.getBossSettings().getWeaponMainHand() != null) {
-            setNBTTagValue(mainHand, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(boss.getBossSettings().getWeaponMainHand().getType()), String.class));
+        BossEquipment equipment = boss.getBossSettings().getEquipment();
+
+        if (equipment.getMainHand() != null) {
+            setNBTTagValue(mainHand, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(equipment.getMainHand().getType()), String.class));
             setNBTTagValue(mainHand, "Count", new NBTTagInstance<>(NBTTagClass.INT, 1, int.class));
         }
-        if (boss.getBossSettings().getWeaponSecondHand() != null) {
-            setNBTTagValue(offHand, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(boss.getBossSettings().getWeaponSecondHand().getType()), String.class));
+        if (equipment.getOffHand() != null) {
+            setNBTTagValue(offHand, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(equipment.getOffHand().getType()), String.class));
             setNBTTagValue(offHand, "Count", new NBTTagInstance<>(NBTTagClass.INT, 1, int.class));
         }
 
         Object enchantmentsList = createNBTTagList();
 
-        if (boss.getBossSettings().getWeaponMainHand() != null) {
-            if (boss.getBossSettings().getWeaponMainHand().getItemMeta().hasEnchants()) {
-                for (Enchantment ench : boss.getBossSettings().getWeaponMainHand().getItemMeta().getEnchants().keySet()) {
+        if (equipment.getMainHand() != null) {
+            if (equipment.getMainHand().getItemMeta().hasEnchants()) {
+                for (Enchantment ench : equipment.getMainHand().getItemMeta().getEnchants().keySet()) {
                     Object enchTag = createNBTTagCompound();
                     setNBTTagValue(enchTag, "id", new NBTTagInstance<>(NBTTagClass.INT, ench.getId(), int.class));
-                    setNBTTagValue(enchTag, "lvl", new NBTTagInstance<>(NBTTagClass.INT, boss.getBossSettings().getWeaponMainHand().getItemMeta().getEnchantLevel(ench), int.class));
+                    setNBTTagValue(enchTag, "lvl", new NBTTagInstance<>(NBTTagClass.INT, equipment.getMainHand().getItemMeta().getEnchantLevel(ench), int.class));
                     invokeMethod(enchantmentsList.getClass(), "add", enchantmentsList, new Class<?>[]{getNMSClass("NBTBase")}, new Object[]{enchTag});
                 }
             }
         }
 
         Object enchantmentsList0 = createNBTTagList();
-        if (boss.getBossSettings().getWeaponSecondHand() != null) {
-            if (boss.getBossSettings().getWeaponSecondHand().getItemMeta().hasEnchants()) {
-                for (Enchantment ench : boss.getBossSettings().getWeaponSecondHand().getItemMeta().getEnchants().keySet()) {
+        if (equipment.getOffHand() != null) {
+            if (equipment.getOffHand().getItemMeta().hasEnchants()) {
+                for (Enchantment ench : equipment.getOffHand().getItemMeta().getEnchants().keySet()) {
                     Object enchTag = createNBTTagCompound();
                     setNBTTagValue(enchTag, "id", new NBTTagInstance<>(NBTTagClass.INT, ench.getId(), int.class));
-                    setNBTTagValue(enchTag, "lvl", new NBTTagInstance<>(NBTTagClass.INT, boss.getBossSettings().getWeaponSecondHand().getItemMeta().getEnchantLevel(ench), int.class));
+                    setNBTTagValue(enchTag, "lvl", new NBTTagInstance<>(NBTTagClass.INT, equipment.getOffHand().getItemMeta().getEnchantLevel(ench), int.class));
                     invokeMethod(enchantmentsList0.getClass(), "add", enchantmentsList0, new Class<?>[]{getNMSClass("NBTBase")}, new Object[]{enchTag});
                 }
             }
@@ -194,20 +197,22 @@ public class NBTSpawnerUtil extends Reflection {
         Object nbtLeggings = createNBTTagCompound();
         Object nbtBoots = createNBTTagCompound();
 
-        if (boss.getBossSettings().getArmor()[0] != null) {
-            setNBTTagValue(nbtHelmet, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(boss.getBossSettings().getArmor()[0].getType()), String.class));
+        BossEquipment equipment = boss.getBossSettings().getEquipment();
+
+        if (equipment.getHelmet() != null) {
+            setNBTTagValue(nbtHelmet, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(equipment.getHelmet().getType()), String.class));
             setNBTTagValue(nbtHelmet, "Count", new NBTTagInstance<>(NBTTagClass.INT, 1, int.class));
         }
-        if (boss.getBossSettings().getArmor()[1] != null) {
-            setNBTTagValue(nbtChestplate, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(boss.getBossSettings().getArmor()[1].getType()), String.class));
+        if (equipment.getChestplate() != null) {
+            setNBTTagValue(nbtChestplate, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(equipment.getChestplate().getType()), String.class));
             setNBTTagValue(nbtChestplate, "Count", new NBTTagInstance<>(NBTTagClass.INT, 1, int.class));
         }
-        if (boss.getBossSettings().getArmor()[2] != null) {
-            setNBTTagValue(nbtLeggings, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(boss.getBossSettings().getArmor()[2].getType()), String.class));
+        if (equipment.getLeggings() != null) {
+            setNBTTagValue(nbtLeggings, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(equipment.getLeggings().getType()), String.class));
             setNBTTagValue(nbtLeggings, "Count", new NBTTagInstance<>(NBTTagClass.INT, 1, int.class));
         }
-        if (boss.getBossSettings().getArmor()[3] != null) {
-            setNBTTagValue(nbtBoots, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(boss.getBossSettings().getArmor()[3].getType()), String.class));
+        if (equipment.getBoots() != null) {
+            setNBTTagValue(nbtBoots, "id", new NBTTagInstance<>(NBTTagClass.STRING, getMinecraftID(equipment.getBoots().getType()), String.class));
             setNBTTagValue(nbtBoots, "Count", new NBTTagInstance<>(NBTTagClass.INT, 1, int.class));
         }
 

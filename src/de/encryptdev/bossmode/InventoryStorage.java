@@ -1,14 +1,12 @@
 package de.encryptdev.bossmode;
 
 import de.encryptdev.bossmode.boss.util.BossEditor;
-import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.boss.util.EntityTypeVersion;
 import de.encryptdev.bossmode.ref.Reflection;
 import de.encryptdev.bossmode.util.ItemCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
-import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -453,7 +451,6 @@ public class InventoryStorage {
 
         return inventory;
     }
-
 
     public enum PutType {
 
