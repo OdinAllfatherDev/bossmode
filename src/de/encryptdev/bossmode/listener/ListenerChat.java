@@ -23,6 +23,8 @@ import java.util.List;
  */
 public class ListenerChat implements Listener {
 
+    public String test;
+
     private final HashMap<Player, List<String>> specialAttackMesasges = new HashMap<>();
 
     @EventHandler(priority = EventPriority.HIGHEST)
