@@ -21,7 +21,8 @@ Permissions are bossmode.admin or bossmoded.*
 
 # API
 If you want to create a new boss, extend from the abstract class APIBoss:
-`package de.encryptdev.bossmode.test;
+`
+package de.encryptdev.bossmode.test;
 
 import de.encryptdev.bossmode.boss.APIBoss;
 import de.encryptdev.bossmode.boss.util.BossSettings;
@@ -33,12 +34,14 @@ public class MyBoss extends APIBoss {
     public MyBoss(BossSettings bossSettings, int livingId, String name, Location spawnLocation, EntityType type) {
         super(bossSettings, livingId, name, spawnLocation, type);
     }
-}`
+}
+`
 
 Now you can override all methodes from the class
 
 The API have events:
-`package de.encryptdev.bossmode.test;
+`
+package de.encryptdev.bossmode.test;
 
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.boss.event.BossDamageEvent;
@@ -69,9 +72,11 @@ public class BossEvent {
         IBoss iBoss = event.getBoss();
     }
  
-}`
+}
+`
 Or use the BossManager class:
-`package de.encryptdev.bossmode.test;
+`
+package de.encryptdev.bossmode.test;
 
 import de.encryptdev.bossmode.boss.util.BossManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -85,8 +90,9 @@ public class MyPlugin extends JavaPlugin {
         this.bossManager = BossMode.getInstance().getBossManager();
     }
 }
+ 
  `
 The interface IBoss is in everyone boss implemented
 
 # Help?
-Join my [Discord}(https://discord.gg/NUPDFR7)!
+Join my [Discord](https://discord.gg/NUPDFR7)!
