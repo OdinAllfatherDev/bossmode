@@ -17,6 +17,10 @@
 - /boss list - show all bosses
 - /boss spawn <id> - spawn a boss manual
 - /boss spawner <id> - get a spawner from the boss, if the spawner exist
+- /boss kill <id> - kill a specific boss
+- /boss killall - kill all bosses
+- /boss info <id> - show information about the boss  
+  
 Permissions are bossmode.admin or bossmoded.*
 
 
