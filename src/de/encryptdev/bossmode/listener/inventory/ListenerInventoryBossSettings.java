@@ -40,9 +40,6 @@ public class ListenerInventoryBossSettings extends InventoryListenerAdapter {
                 case "§bEquipment":
                     player.openInventory(BossMode.getInstance().getInventoryStorage().equipment());
                     break;
-                case "§eMount":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().mountInventory());
-                    break;
                 case "§aBiome":
                     player.openInventory(BossMode.getInstance().getInventoryStorage().getBiomeInventory(1));
                     break;

@@ -5,8 +5,6 @@ import de.encryptdev.bossmode.boss.ai.BossAISpecialAttack;
 import de.encryptdev.bossmode.boss.event.BossDamageEvent;
 import de.encryptdev.bossmode.boss.event.BossDeathEvent;
 import de.encryptdev.bossmode.boss.event.BossSpawnEvent;
-import de.encryptdev.bossmode.boss.mount.BossMount;
-import de.encryptdev.bossmode.boss.mount.MountData;
 import de.encryptdev.bossmode.boss.path.BossPathfinderEdited;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossSettings;
@@ -58,7 +56,6 @@ public abstract class APIBoss implements IBoss {
     private boolean is1_8;
     private BossBarV1_8 bossBar1_8;
     private List<Player> nearbyPlayers;
-    private BossMount bossMount;
 
     public APIBoss(BossSettings bossSettings, int livingId, String name, Location spawnLocation, EntityType type) {
         this.bossSettings = bossSettings;
@@ -74,7 +71,6 @@ public abstract class APIBoss implements IBoss {
         this.hasSpawner = false;
         this.worldName = spawnLocation != null ? spawnLocation.getWorld().getName() : "world";
         this.nearbyPlayers = new LinkedList<>();
-        this.bossMount = null;
     }
 
     private void checkPlayers() {
@@ -142,10 +138,6 @@ public abstract class APIBoss implements IBoss {
                             specialAttacks.add(sa);
                         }
         this.specialAttack = new BossAISpecialAttack(this, bossSettings.getSpecialAttackTicks());
-    }
-
-    public void initBossMount(BossMount.BossMountType bossMountType, MountData mountData) {
-        this.bossMount = new BossMount(this, bossMountType, mountData);
     }
 
     @Override
@@ -244,11 +236,6 @@ public abstract class APIBoss implements IBoss {
     }
 
     @Override
-    public BossMount getBossMount() {
-        return bossMount;
-    }
-
-    @Override
     public String getBossName() {
         return name;
     }
@@ -338,6 +325,10 @@ public abstract class APIBoss implements IBoss {
             else
                 this.nearbyPlayers.forEach(player -> bossBar1_8.setProgress(progress1_8));
         }
+    }
+
+    public List<Player> getNearbyPlayers() {
+        return nearbyPlayers;
     }
 
     @Override

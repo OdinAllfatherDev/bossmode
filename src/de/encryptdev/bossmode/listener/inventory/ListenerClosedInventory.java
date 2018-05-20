@@ -43,8 +43,7 @@ public class ListenerClosedInventory implements Listener {
                 inventory.getName().equalsIgnoreCase("§4Advanced Settings") ||
                 inventory.getName().equalsIgnoreCase("§4Entity Type #1") ||
                 inventory.getName().equalsIgnoreCase("§4Entity Type #2") ||
-                inventory.getName().equalsIgnoreCase("§bEquipment") ||
-                inventory.getName().equalsIgnoreCase("§eSet the mount type")) {
+                inventory.getName().equalsIgnoreCase("§bEquipment") ) {
 
             checkQuit(player);
 
@@ -69,19 +68,6 @@ public class ListenerClosedInventory implements Listener {
                     if (player.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting") &&
                             !bossManager.getChatCommand().containsKey(player)) {
                         bossManager.getPlayerSpawnerEditor().remove(player);
-                        bossManager.getEditors().remove(player);
-                        player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
-                    }
-                }
-            }.runTaskLater(BossMode.getInstance(), 5);
-        } else if (inventory.getName().equalsIgnoreCase("§eMount Settings")) {
-            new BukkitRunnable() {
-
-                @Override
-                public void run() {
-                    if(player.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting") &&
-                            !bossManager.getChatCommand().containsKey(player)) {
-                        bossManager.getPlayerMountEditor().remove(player);
                         bossManager.getEditors().remove(player);
                         player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
                     }

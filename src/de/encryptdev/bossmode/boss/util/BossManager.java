@@ -3,8 +3,6 @@ package de.encryptdev.bossmode.boss.util;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.Boss;
 import de.encryptdev.bossmode.boss.IBoss;
-import de.encryptdev.bossmode.boss.mount.BossMount;
-import de.encryptdev.bossmode.boss.mount.MountEditor;
 import de.encryptdev.bossmode.util.BMFileManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -35,7 +33,6 @@ public class BossManager {
     private BossSaver bossSaver;
     private HashMap<Player, BossEditor> playerBossEditor;
     private HashMap<Player, SpawnerEditor> playerSpawnerEditor;
-    private HashMap<Player, MountEditor> playerMountEditor;
     private HashMap<Player, String> chatCommand;
     private HashMap<IBoss, Integer> naturalMap;
     private List<IBoss> allSpawnedBosses;
@@ -45,9 +42,9 @@ public class BossManager {
         this.editors = new LinkedList<>();
         this.playerBossEditor = new HashMap<>();
         this.playerSpawnerEditor = new HashMap<>();
-        this.playerMountEditor = new HashMap<>();
         this.editBoss = new LinkedList<>();
         this.chatCommand = new HashMap<>();
+        this.naturalMap = new HashMap<>();
         this.allSpawnedBosses = new LinkedList<>();
     }
 
@@ -74,11 +71,6 @@ public class BossManager {
         playerSpawnerEditor.put(player, editor);
     }
 
-    public void createMountEditor(Player player, BossMount.BossMountType mountType) {
-        MountEditor mountEditor = new MountEditor(mountType);
-        playerMountEditor.put(player, mountEditor);
-    }
-
     public void createBossEditor(Player player, IBoss boss) {
         BossEditor editor = new BossEditor(boss);
         playerBossEditor.put(player, editor);
@@ -90,10 +82,6 @@ public class BossManager {
 
     public BossEditor getBossEditor(Player player) {
         return playerBossEditor.get(player);
-    }
-
-    public MountEditor getMountEditor(Player player) {
-        return playerMountEditor.get(player);
     }
 
     public ItemStack createSpawner(SpawnerEditor editor) {
@@ -237,8 +225,8 @@ public class BossManager {
     public List<IBoss> getSpecificBoss(int id) {
         List<IBoss> iBosses = new ArrayList<>();
 
-        for(IBoss b : allSpawnedBosses)
-            if(b.getBossID() == id)
+        for (IBoss b : allSpawnedBosses)
+            if (b.getBossID() == id)
                 iBosses.add(b);
 
         return iBosses;
@@ -250,10 +238,6 @@ public class BossManager {
 
     public List<IBoss> getAllSpawnedBosses() {
         return allSpawnedBosses;
-    }
-
-    public HashMap<Player, MountEditor> getPlayerMountEditor() {
-        return playerMountEditor;
     }
 
     public HashMap<Player, String> getChatCommand() {

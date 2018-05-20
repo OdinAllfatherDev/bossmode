@@ -110,8 +110,6 @@ public class BossMode extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ListenerInventoryAdvancedSettings(bossManager), this);
         getServer().getPluginManager().registerEvents(new ListenerInventoryEntityTypes(bossManager), this);
         getServer().getPluginManager().registerEvents(new ListenerInventoryEquipment(bossManager), this);
-        getServer().getPluginManager().registerEvents(new ListenerInventoryMount(bossManager), this);
-        getServer().getPluginManager().registerEvents(new ListenerInventoryMountSettings(bossManager), this);
         getServer().getPluginManager().registerEvents(new ListenerInventoryCounterType(bossManager), this);
     }
 

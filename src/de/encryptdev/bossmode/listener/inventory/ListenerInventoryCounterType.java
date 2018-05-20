@@ -69,7 +69,7 @@ public class ListenerInventoryCounterType extends InventoryListenerAdapter {
                         changeMiddleItem(inventory, counterType, amount + 50.0);
                         break;
                     case "§eFinish":
-                        switch(counterType) {
+                        switch (counterType) {
                             case CHANCE_TO_SPAWN:
                                 bossManager.getBossEditor(player).setChanceToSpawn((float) amount);
                                 player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));

@@ -1,8 +1,6 @@
 package de.encryptdev.bossmode;
 
-import de.encryptdev.bossmode.boss.mount.BossMount;
 import de.encryptdev.bossmode.boss.util.BossEditor;
-import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.boss.util.EntityTypeVersion;
 import de.encryptdev.bossmode.ref.Reflection;
 import de.encryptdev.bossmode.util.ItemCreator;
@@ -145,9 +143,6 @@ public class InventoryStorage {
         ItemStack nearbyRad = ItemCreator.getItem(Material.GHAST_TEAR, "§eNearby Radius", 1, (byte) 0,
                 Arrays.asList("§eSet the radius where the boss follow player"));
 
-        ItemStack mount = ItemCreator.getItem(Material.SADDLE, "§eMount", 1, (byte) 0,
-                Arrays.asList("§eSet the mount for the boss"));
-
         inventory.setItem(8, advanced);
 
         inventory.setItem(13, specialAttacks);
@@ -158,7 +153,6 @@ public class InventoryStorage {
 
         inventory.setItem(10, name);
         inventory.setItem(19, equipment);
-        inventory.setItem(20, mount);
         inventory.setItem(28, potionEffects);
         inventory.setItem(37, exp);
 
@@ -169,39 +163,6 @@ public class InventoryStorage {
         inventory.setItem(41, naturalSpawn);
 
         inventory.setItem(53, finishBuild);
-
-        return inventory;
-    }
-
-    public Inventory mountInventory() {
-        Inventory inventory = Bukkit.createInventory(null, 9, "§eSet the mount type");
-
-        List<ItemStack> items = new ArrayList<>();
-
-        for (BossMount.BossMountType type : BossMount.BossMountType.values())
-            items.add(ItemCreator.getItem(Material.MONSTER_EGG, "§e" + BossUtil.makeEnumNameNormal(type), 1, (byte) type.getType().getTypeId()));
-        ItemStack back = ItemCreator.getSkull("§eBack", Bukkit.getOfflinePlayer("MHF_ArrowDown"));
-
-        for (int i = 0; i < items.size(); i++) {
-            inventory.setItem(i, items.get(i));
-        }
-        inventory.setItem(8, back);
-
-        return inventory;
-    }
-
-    public Inventory mountSettings() {
-        Inventory inventory = Bukkit.createInventory(null, 9, "§eMount Settings");
-
-        ItemStack strength = ItemCreator.getItem(Material.ANVIL, "§eJump Strength", 1, (byte) 0, Arrays.asList("§eSet the jump strength for the mount"));
-        ItemStack maxHealth = ItemCreator.getItem(Material.APPLE, "§eHealth", 1, (byte) 0, Arrays.asList("§eSet the health for the mount"));
-        ItemStack adult = ItemCreator.getItem(Material.HAY_BLOCK, "§eAdult", 1, (byte) 0, Arrays.asList("§eSet the horse to a adult, or baby", "", "§2ON"));
-        ItemStack armor = ItemCreator.getItem(Material.DIAMOND_BARDING, "§eArmor", 1, (byte) 0, Arrays.asList("§eChange the horse armor"));
-
-        inventory.setItem(0, strength);
-        inventory.setItem(1, maxHealth);
-        inventory.setItem(2, adult);
-        inventory.setItem(3, armor);
 
         return inventory;
     }
