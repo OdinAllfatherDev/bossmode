@@ -1,7 +1,6 @@
 package de.encryptdev.bossmode.command;
 
 import de.encryptdev.bossmode.BossMode;
-import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossEquipment;
@@ -67,9 +66,9 @@ public class CommandBoss extends ACommand {
                     BossMode.getInstance().getBossManager().getEditors().remove(player);
                 int i = 0;
 
-                List<IBoss> copy = BossMode.getInstance().getBossManager().getNaturalSpawnManager().getNaturalSpawned();
+                List<IBoss> copy = BossMode.getInstance().getBossManager().getAllSpawnedBosses();
 
-                for(IBoss iBoss : copy) {
+                for (IBoss iBoss : copy) {
                     int livingId = iBoss.getLivingID();
                     for (Entity entity : player.getWorld().getEntities())
                         if (entity.hasMetadata(BossSettings.META_DATA_BOSS_LIVING_ID))
@@ -99,7 +98,7 @@ public class CommandBoss extends ACommand {
                     return;
                 }
 
-                BossMode.getInstance().getBossManager().getBoss(id).spawnBoss(null);
+                BossMode.getInstance().getBossManager().spawnBoss(BossMode.getInstance().getBossManager().getBoss(id), null);
 
             } else if (args[0].equalsIgnoreCase("spawner")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player))
@@ -131,11 +130,11 @@ public class CommandBoss extends ACommand {
 
                 int i = 0;
 
-                for(IBoss iBoss : BossMode.getInstance().getBossManager().getNaturalSpawnManager().getBossList(id))  {
+                for (IBoss iBoss : BossMode.getInstance().getBossManager().getSpecificBoss(id)) {
                     int livingId = iBoss.getLivingID();
-                    for(Entity entity : player.getWorld().getEntities())
-                        if(entity.hasMetadata(BossSettings.META_DATA_BOSS_LIVING_ID))
-                            if(entity.getMetadata(BossSettings.META_DATA_BOSS_LIVING_ID).get(0).asInt() == livingId) {
+                    for (Entity entity : player.getWorld().getEntities())
+                        if (entity.hasMetadata(BossSettings.META_DATA_BOSS_LIVING_ID))
+                            if (entity.getMetadata(BossSettings.META_DATA_BOSS_LIVING_ID).get(0).asInt() == livingId) {
                                 iBoss.death();
                                 entity.remove();
                                 i++;
@@ -183,8 +182,8 @@ public class CommandBoss extends ACommand {
 
                 player.sendMessage(BossMode.PREFIX + "NearAttackEntities: §a" + (boss.getBossSettings().getNearAttackEntities().isEmpty() ? "/" : ""));
                 List<String> nearEntities = boss.getBossSettings().getNearAttackEntities();
-                if(!nearEntities.isEmpty())
-                    for(String str : nearEntities)
+                if (!nearEntities.isEmpty())
+                    for (String str : nearEntities)
                         player.sendMessage(BossMode.PREFIX + " -> §a" + str.replace(".", ",").split(",")[4].replace("Entity", ""));
 
                 BossEquipment equipment = boss.getBossSettings().getEquipment();
@@ -199,7 +198,7 @@ public class CommandBoss extends ACommand {
                 player.sendMessage(BossMode.PREFIX + "Boots: §a" + (equipment.getBoots() == null ? "/" : BossUtil.makeEnumNameNormal(equipment.getBoots().getType())));
 
 
-            } else if(args[0].equalsIgnoreCase("delete")) {
+            } else if (args[0].equalsIgnoreCase("delete")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player))
                     BossMode.getInstance().getBossManager().getEditors().remove(player);
                 int id = Integer.parseInt(args[1]);
@@ -211,10 +210,10 @@ public class CommandBoss extends ACommand {
                     return;
                 }
 
-                boolean result = BossMode.getInstance().getBossManager().delete(boss);
-                if(result) {
+                boolean result = BossMode.getInstance().getBossManager().deleteBoss(boss);
+                if (result) {
                     player.sendMessage(BossMode.getInstance().getTranslatedMessage("deleteBossSuccesfull"));
-                }  else {
+                } else {
 
                 }
 

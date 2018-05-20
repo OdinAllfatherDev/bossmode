@@ -5,14 +5,18 @@ import de.encryptdev.bossmode.boss.ai.BossAISpecialAttack;
 import de.encryptdev.bossmode.boss.event.BossDamageEvent;
 import de.encryptdev.bossmode.boss.event.BossDeathEvent;
 import de.encryptdev.bossmode.boss.event.BossSpawnEvent;
+import de.encryptdev.bossmode.boss.mount.BossMount;
+import de.encryptdev.bossmode.boss.mount.MountData;
 import de.encryptdev.bossmode.boss.path.BossPathfinderEdited;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossSettings;
 import de.encryptdev.bossmode.ref.Reflection;
 import de.encryptdev.bossmode.util.BossBarV1_8;
-import de.encryptdev.bossmode.util.ItemCreator;
 import de.encryptdev.bossmode.util.exception.BossAlreadySpawn;
-import org.bukkit.*;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
@@ -25,7 +29,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by EncryptDev
@@ -51,6 +58,7 @@ public abstract class APIBoss implements IBoss {
     private boolean is1_8;
     private BossBarV1_8 bossBar1_8;
     private List<Player> nearbyPlayers;
+    private BossMount bossMount;
 
     public APIBoss(BossSettings bossSettings, int livingId, String name, Location spawnLocation, EntityType type) {
         this.bossSettings = bossSettings;
@@ -66,6 +74,7 @@ public abstract class APIBoss implements IBoss {
         this.hasSpawner = false;
         this.worldName = spawnLocation != null ? spawnLocation.getWorld().getName() : "world";
         this.nearbyPlayers = new LinkedList<>();
+        this.bossMount = null;
     }
 
     private void checkPlayers() {
@@ -135,6 +144,10 @@ public abstract class APIBoss implements IBoss {
         this.specialAttack = new BossAISpecialAttack(this, bossSettings.getSpecialAttackTicks());
     }
 
+    public void initBossMount(BossMount.BossMountType bossMountType, MountData mountData) {
+        this.bossMount = new BossMount(this, bossMountType, mountData);
+    }
+
     @Override
     public void setHasSpawner(boolean hasSpawner) {
         this.hasSpawner = hasSpawner;
@@ -155,6 +168,8 @@ public abstract class APIBoss implements IBoss {
         if (spawnLocation == null)
             throw new RuntimeException("Spawnlocation for the boss '" + getBossID() + "' is not set");
 
+        BossMode.getInstance().getConfig().set("livingBossId", livingId);
+        BossMode.getInstance().saveConfig();
         this.livingBossEntity = this.getBossSettings().createLivingEntity(type, spawnLocation, livingId);
 
         this.checkPlayers();
@@ -162,7 +177,7 @@ public abstract class APIBoss implements IBoss {
         this.worldName = livingBossEntity.getWorld().getName();
         this.bossPathfinderEdited = new BossPathfinderEdited(this);
 
-        this.livingBossEntity.setCustomName(name);
+        this.livingBossEntity.setCustomName(name + " " + livingId);
         createBossBar(nearbyPlayers);
         this.livingBossEntity.setCustomNameVisible(true);
         this.initAI();
@@ -182,9 +197,9 @@ public abstract class APIBoss implements IBoss {
                     }
             }
         }
-        BossMode.getInstance().getBossManager().getNaturalSpawnManager().getNaturalSpawned().add(this);
 
         Bukkit.getPluginManager().callEvent(new BossSpawnEvent(this, spawnLocation));
+
     }
 
     @Override
@@ -226,6 +241,11 @@ public abstract class APIBoss implements IBoss {
     @Override
     public org.bukkit.boss.BossBar getBossBar() {
         return bossBar;
+    }
+
+    @Override
+    public BossMount getBossMount() {
+        return bossMount;
     }
 
     @Override
@@ -290,9 +310,10 @@ public abstract class APIBoss implements IBoss {
             task0.get(this).cancel();
             task0.remove(this);
         }
-        BossMode.getInstance().getBossManager().getNaturalSpawnManager().getNaturalSpawned().remove(this);
+        BossMode.getInstance().getBossManager().getAllSpawnedBosses().remove(this);
         if (this.livingBossEntity != null)
             this.livingBossEntity.remove();
+
     }
 
     @Override
@@ -342,16 +363,6 @@ public abstract class APIBoss implements IBoss {
     @Override
     public BossSettings getBossSettings() {
         return bossSettings;
-    }
-
-    @Override
-    public ItemStack getEgg() {
-        return ItemCreator.getItem(Material.MONSTER_EGG, "§eSpawnEgg: " + getBossName(),
-                1, (byte) type.getTypeId(), Arrays.asList("§eBossID: " + getBossID(),
-                        "§eLivingID: " + getLivingID(),
-                        " ",
-                        "  ",
-                        "§eRight click to spawn"));
     }
 
     @Override

@@ -1,6 +1,8 @@
 package de.encryptdev.bossmode;
 
+import de.encryptdev.bossmode.boss.mount.BossMount;
 import de.encryptdev.bossmode.boss.util.BossEditor;
+import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.boss.util.EntityTypeVersion;
 import de.encryptdev.bossmode.ref.Reflection;
 import de.encryptdev.bossmode.util.ItemCreator;
@@ -143,6 +145,9 @@ public class InventoryStorage {
         ItemStack nearbyRad = ItemCreator.getItem(Material.GHAST_TEAR, "§eNearby Radius", 1, (byte) 0,
                 Arrays.asList("§eSet the radius where the boss follow player"));
 
+        ItemStack mount = ItemCreator.getItem(Material.SADDLE, "§eMount", 1, (byte) 0,
+                Arrays.asList("§eSet the mount for the boss"));
+
         inventory.setItem(8, advanced);
 
         inventory.setItem(13, specialAttacks);
@@ -153,6 +158,7 @@ public class InventoryStorage {
 
         inventory.setItem(10, name);
         inventory.setItem(19, equipment);
+        inventory.setItem(20, mount);
         inventory.setItem(28, potionEffects);
         inventory.setItem(37, exp);
 
@@ -163,6 +169,39 @@ public class InventoryStorage {
         inventory.setItem(41, naturalSpawn);
 
         inventory.setItem(53, finishBuild);
+
+        return inventory;
+    }
+
+    public Inventory mountInventory() {
+        Inventory inventory = Bukkit.createInventory(null, 9, "§eSet the mount type");
+
+        List<ItemStack> items = new ArrayList<>();
+
+        for (BossMount.BossMountType type : BossMount.BossMountType.values())
+            items.add(ItemCreator.getItem(Material.MONSTER_EGG, "§e" + BossUtil.makeEnumNameNormal(type), 1, (byte) type.getType().getTypeId()));
+        ItemStack back = ItemCreator.getSkull("§eBack", Bukkit.getOfflinePlayer("MHF_ArrowDown"));
+
+        for (int i = 0; i < items.size(); i++) {
+            inventory.setItem(i, items.get(i));
+        }
+        inventory.setItem(8, back);
+
+        return inventory;
+    }
+
+    public Inventory mountSettings() {
+        Inventory inventory = Bukkit.createInventory(null, 9, "§eMount Settings");
+
+        ItemStack strength = ItemCreator.getItem(Material.ANVIL, "§eJump Strength", 1, (byte) 0, Arrays.asList("§eSet the jump strength for the mount"));
+        ItemStack maxHealth = ItemCreator.getItem(Material.APPLE, "§eHealth", 1, (byte) 0, Arrays.asList("§eSet the health for the mount"));
+        ItemStack adult = ItemCreator.getItem(Material.HAY_BLOCK, "§eAdult", 1, (byte) 0, Arrays.asList("§eSet the horse to a adult, or baby", "", "§2ON"));
+        ItemStack armor = ItemCreator.getItem(Material.DIAMOND_BARDING, "§eArmor", 1, (byte) 0, Arrays.asList("§eChange the horse armor"));
+
+        inventory.setItem(0, strength);
+        inventory.setItem(1, maxHealth);
+        inventory.setItem(2, adult);
+        inventory.setItem(3, armor);
 
         return inventory;
     }
@@ -450,6 +489,100 @@ public class InventoryStorage {
         inventory.setItem(40, finish);
 
         return inventory;
+    }
+
+    public Inventory counterInventory(CounterType counterType) {
+        Inventory inventory = Bukkit.createInventory(null, 27, counterType.getInventoryName());
+
+        fillInventory(inventory);
+
+        if (counterType.isDecimal()) {
+            ItemStack minus0_1 = ItemCreator.getItem(Material.ARROW, "§e-0.1");
+            ItemStack minus0_5 = ItemCreator.getItem(Material.ARROW, "§e-0.5");
+            ItemStack minus1 = ItemCreator.getItem(Material.ARROW, "§e-1");
+            ItemStack plus0_1 = ItemCreator.getItem(Material.ARROW, "§e+0.1");
+            ItemStack plus0_5 = ItemCreator.getItem(Material.ARROW, "§e+0.5");
+            ItemStack plus1 = ItemCreator.getItem(Material.ARROW, "§e+1");
+            ItemStack ct = ItemCreator.getItem(Material.GOLD_NUGGET, counterType.getInventoryName() + ": §a§l" + counterType.getDefaultValue());
+
+            inventory.setItem(10, minus0_1);
+            inventory.setItem(11, minus0_5);
+            inventory.setItem(12, minus1);
+            inventory.setItem(13, ct);
+            inventory.setItem(14, plus0_1);
+            inventory.setItem(15, plus0_5);
+            inventory.setItem(16, plus1);
+        } else {
+            ItemStack minus1 = ItemCreator.getItem(Material.ARROW, "§e-1");
+            ItemStack minus5 = ItemCreator.getItem(Material.ARROW, "§e-5");
+            ItemStack minus10 = ItemCreator.getItem(Material.ARROW, "§e-10");
+            ItemStack minus50 = ItemCreator.getItem(Material.ARROW, "§e-50");
+            ItemStack plus1 = ItemCreator.getItem(Material.ARROW, "§e+1");
+            ItemStack plus5 = ItemCreator.getItem(Material.ARROW, "§e+5");
+            ItemStack plus10 = ItemCreator.getItem(Material.ARROW, "§e+10");
+            ItemStack plus50 = ItemCreator.getItem(Material.ARROW, "§e+50");
+            ItemStack ct = ItemCreator.getItem(Material.GOLD_NUGGET, counterType.getInventoryName() + ": §a§l" + counterType.getDefaultValue());
+            inventory.setItem(9, minus1);
+            inventory.setItem(10, minus5);
+            inventory.setItem(11, minus10);
+            inventory.setItem(12, minus50);
+            inventory.setItem(13, ct);
+            inventory.setItem(14, plus1);
+            inventory.setItem(15, plus5);
+            inventory.setItem(16, plus10);
+            inventory.setItem(17, plus50);
+        }
+
+        ItemStack finish = ItemCreator.getItem(Material.DIAMOND, "§eFinish");
+
+        inventory.setItem(26, finish);
+
+        return inventory;
+    }
+
+    public enum CounterType {
+
+        HEALTH("§eHealth", false, 20.0),
+        DAMAGE("§eDamage", true, 7.0),
+        DROP_CHANCE_MAIN_HAND("§eDrop Chance Main Hand", false, 1.0),
+        DROP_CHANCE_OFF_HAND("§eDrop Chance Off Hand", false, 1.0),
+        CHANCE_TO_SPAWN("§eChance To Spawn", false, 1.0),
+        SPEED("§eSpeed", true, 1.4),
+        SPAWN_AMOUNT("§eSpawn Amount", false, 10.0),
+        NEARBY_RADIUS("§eNearby Radius", false, 100.0),
+        SPAWN_RADIUS("§eSpawn Raidus", false, 5.0),
+        SPECIAL_ATTACK_STOMP_STRENGTH("§eSpecialAttack Stomp Strength", false, 10.0),
+        SPAWNER_DELAY("§eSpawner Delay", false, 20.0),
+        SPAWNER_MIN_DELAY("§eSpawner Min Delay", false, 200.0),
+        SPAWNER_MAX_DELAY("§eSpawner Max Delay", false, 800.0),
+        SPAWNER_REQUIRED_PLAYERS_RANGE("§eSpawner Required Players Range", false, 16.0),
+        SPAWNER_SPAWN_RANGE("§eSpawner Spawn Range", false, 4.0),
+        SPAWNER_SPAWN_COUNT("§eSpawner Spawn Count", false, 4.0),
+        DROPPED_XP("§eDropped XP", false, 100.0),
+        SPECIAL_ATTACK_ARMY_CHANCE("§eSpecialAttack Army Chance", false, 10.0),
+        SPECIAL_ATTACK_ARMY_AMOUNT("§eSpecialAttack Army Amount", false, 5.0);
+
+        private String inventoryName;
+        private boolean isDecimal;
+        private double defaultValue;
+
+        CounterType(String inventoryName, boolean isDecimal, double defaultValue) {
+            this.inventoryName = inventoryName;
+            this.isDecimal = isDecimal;
+            this.defaultValue = defaultValue;
+        }
+
+        public double getDefaultValue() {
+            return defaultValue;
+        }
+
+        public boolean isDecimal() {
+            return isDecimal;
+        }
+
+        public String getInventoryName() {
+            return inventoryName;
+        }
     }
 
     public enum PutType {

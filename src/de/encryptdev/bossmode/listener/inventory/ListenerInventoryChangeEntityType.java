@@ -1,69 +1,68 @@
 package de.encryptdev.bossmode.listener.inventory;
 
 import de.encryptdev.bossmode.BossMode;
-import de.encryptdev.bossmode.util.CheckNull;
+import de.encryptdev.bossmode.boss.util.BossManager;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by EncryptDev
  */
-public class ListenerInventoryChangeEntityType implements Listener {
-
-    @EventHandler
-    public void on(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
-
-        if (CheckNull.checkNull(event))
-            return;
-
-        if (event.getInventory().getName().equalsIgnoreCase("§eSet the entity type")) {
-            event.setCancelled(true);
-            String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
+public class ListenerInventoryChangeEntityType extends InventoryListenerAdapter {
+    
+    private BossManager bossManager;
+    
+    public ListenerInventoryChangeEntityType(BossManager bossManager) {
+        this.bossManager = bossManager;
+    }
+    
+    @Override
+    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+        if (inventory.getName().equalsIgnoreCase("§eSet the entity type")) {
+            String itemName = itemStack.getItemMeta().getDisplayName();
             String normalName = itemName.substring(4, itemName.length());
 
             switch (normalName) {
                 case "Zombie":
-                    BossMode.getInstance().getBossManager().createBossEditor(player, EntityType.ZOMBIE);
+                    bossManager.createBossEditor(player, EntityType.ZOMBIE);
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(false));
                     break;
                 case "Skeleton":
-                    BossMode.getInstance().getBossManager().createBossEditor(player, EntityType.SKELETON);
+                    bossManager.createBossEditor(player, EntityType.SKELETON);
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(false));
                     break;
                 case "Enderman":
-                    BossMode.getInstance().getBossManager().createBossEditor(player, EntityType.ENDERMAN);
+                    bossManager.createBossEditor(player, EntityType.ENDERMAN);
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(false));
                     break;
                 case "Creeper":
-                    BossMode.getInstance().getBossManager().createBossEditor(player, EntityType.CREEPER);
+                    bossManager.createBossEditor(player, EntityType.CREEPER);
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(false));
                     break;
                 case "Wither Skeleton":
-                    BossMode.getInstance().getBossManager().createBossEditor(player, EntityType.WITHER_SKELETON);
+                    bossManager.createBossEditor(player, EntityType.WITHER_SKELETON);
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(false));
                 case "Pig Zombie":
-                    BossMode.getInstance().getBossManager().createBossEditor(player, EntityType.PIG_ZOMBIE);
+                    bossManager.createBossEditor(player, EntityType.PIG_ZOMBIE);
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(false));
                     break;
                 case "Spider":
-                    BossMode.getInstance().getBossManager().createBossEditor(player, EntityType.SPIDER);
+                    bossManager.createBossEditor(player, EntityType.SPIDER);
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(false));
                     break;
                 case "Cave Spider":
-                    BossMode.getInstance().getBossManager().createBossEditor(player, EntityType.CAVE_SPIDER);
+                    bossManager.createBossEditor(player, EntityType.CAVE_SPIDER);
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(false));
                     break;
                 case "Giant":
-                    BossMode.getInstance().getBossManager().createBossEditor(player, EntityType.GIANT);
+                    bossManager.createBossEditor(player, EntityType.GIANT);
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(false));
                     break;
             }
 
         }
-
+        return true;
     }
 }

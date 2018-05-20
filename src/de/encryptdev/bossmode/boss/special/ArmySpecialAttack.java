@@ -48,6 +48,10 @@ public class ArmySpecialAttack extends SpecialAttack {
         this.iBoss = iBoss;
     }
 
+    public int getAmount() {
+        return amount;
+    }
+
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();

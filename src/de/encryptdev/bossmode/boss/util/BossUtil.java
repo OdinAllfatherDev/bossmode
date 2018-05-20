@@ -30,8 +30,13 @@ public class BossUtil {
         return entity.hasMetadata(BossSettings.META_DATA_BOSS_ID);
     }
 
-    public static IBoss getBossByMetadata(LivingEntity entity) {
-        return BossMode.getInstance().getBossManager().getBoss(entity.getMetadata(BossSettings.META_DATA_BOSS_LIVING_ID).get(0).asInt());
+    public static IBoss getLivingBossByMetadata(LivingEntity entity) {
+        for(IBoss boss : BossMode.getInstance().getBossManager().getAllSpawnedBosses()) {
+            if(boss.getLivingID() == entity.getMetadata(BossSettings.META_DATA_BOSS_LIVING_ID).get(0).asInt()) {
+                return boss;
+            }
+        }
+        return null;
     }
 
     public static String makeEnumNameNormal(Enum e) {

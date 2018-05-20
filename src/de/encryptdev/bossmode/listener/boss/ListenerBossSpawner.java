@@ -1,6 +1,7 @@
 package de.encryptdev.bossmode.listener.boss;
 
 import de.encryptdev.bossmode.BossMode;
+import de.encryptdev.bossmode.boss.util.BossManager;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -13,6 +14,12 @@ import org.bukkit.metadata.FixedMetadataValue;
  */
 public class ListenerBossSpawner implements Listener {
 
+    private BossManager bossManager;
+    
+    public ListenerBossSpawner(BossManager bossManager) {
+        this.bossManager = bossManager;
+    }
+    
     @EventHandler
     public void on(BlockPlaceEvent event) {
         Player player = event.getPlayer();
@@ -23,7 +30,7 @@ public class ListenerBossSpawner implements Listener {
                     if (event.getBlock().getState() instanceof CreatureSpawner) {
                         BossMode.getInstance().getNbtSpawnerUtil().modifySpawner(player.getInventory().getItemInMainHand(), event.getBlock().getLocation());
                         event.getBlock().setMetadata("boss_id", new FixedMetadataValue(BossMode.getInstance(),
-                                BossMode.getInstance().getBossManager().getBoss(Integer.valueOf(player.getInventory().getItemInMainHand().getItemMeta().getLore().get(0).split(":")[1].trim()))));
+                                bossManager.getBoss(Integer.valueOf(player.getInventory().getItemInMainHand().getItemMeta().getLore().get(0).split(":")[1].trim()))));
                     }
                 }
             }

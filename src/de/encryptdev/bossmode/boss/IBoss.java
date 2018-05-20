@@ -1,5 +1,6 @@
 package de.encryptdev.bossmode.boss;
 
+import de.encryptdev.bossmode.boss.mount.BossMount;
 import de.encryptdev.bossmode.boss.path.BossPathfinderEdited;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossSettings;
@@ -59,6 +60,7 @@ public interface IBoss {
 
     void setBossSettings(BossSettings settings);
 
-    ItemStack getEgg();
+    BossMount getBossMount();
+
 
 }

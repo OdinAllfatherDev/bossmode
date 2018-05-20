@@ -2,6 +2,7 @@ package de.encryptdev.bossmode.listener.boss;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.IBoss;
+import de.encryptdev.bossmode.boss.util.BossManager;
 import de.encryptdev.bossmode.boss.util.BossSettings;
 import org.bukkit.entity.Creeper;
 import org.bukkit.entity.LivingEntity;
@@ -15,6 +16,12 @@ import org.bukkit.event.entity.EntityExplodeEvent;
  */
 public class ListenerDeathBoss implements Listener {
 
+    private BossManager bossManager;
+    
+    public ListenerDeathBoss(BossManager bossManager) {
+        this.bossManager = bossManager;
+    }
+    
     @EventHandler
     public void on(EntityDeathEvent event) {
         if (event.getEntity() instanceof LivingEntity) {
@@ -22,7 +29,7 @@ public class ListenerDeathBoss implements Listener {
 
             if (entity.hasMetadata(BossSettings.META_DATA_BOSS_LIVING_ID)) {
                 int id = entity.getMetadata(BossSettings.META_DATA_BOSS_LIVING_ID).get(0).asInt();
-                IBoss iBoss = BossMode.getInstance().getBossManager().getSpawnedBoss(id);
+                IBoss iBoss = bossManager.getSpawnedBoss(id);
                 if(iBoss != null) {
                     iBoss.death();
                     event.setDroppedExp(iBoss.getBossSettings().getDroppedXp());
@@ -40,7 +47,7 @@ public class ListenerDeathBoss implements Listener {
             if(event.getEntity() instanceof Creeper) {
                 if (event.getEntity().hasMetadata(BossSettings.META_DATA_BOSS_LIVING_ID)) {
                     int id = event.getEntity().getMetadata(BossSettings.META_DATA_BOSS_LIVING_ID).get(0).asInt();
-                    IBoss iBoss = BossMode.getInstance().getBossManager().getSpawnedBoss(id);
+                    IBoss iBoss = bossManager.getSpawnedBoss(id);
                     iBoss.death();
                 }
             }

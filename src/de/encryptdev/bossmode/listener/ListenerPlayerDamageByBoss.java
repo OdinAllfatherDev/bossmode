@@ -2,6 +2,7 @@ package de.encryptdev.bossmode.listener;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.IBoss;
+import de.encryptdev.bossmode.boss.util.BossManager;
 import de.encryptdev.bossmode.boss.util.BossSettings;
 import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.ref.Reflection;
@@ -20,12 +21,18 @@ import java.util.List;
  */
 public class ListenerPlayerDamageByBoss implements Listener {
 
+    private BossManager bossManager;
+
+    public ListenerPlayerDamageByBoss(BossManager bossManager) {
+        this.bossManager = bossManager;
+    }
+
     @EventHandler
     public void on(EntityDamageByEntityEvent event) {
         if (event.getEntity() instanceof Player && event.getDamager() instanceof LivingEntity) {
             Player player = (Player) event.getEntity();
             if (BossUtil.isBoss((LivingEntity) event.getDamager())) {
-                IBoss iBoss = BossUtil.getBossByMetadata((LivingEntity) event.getDamager());
+                IBoss iBoss = BossUtil.getLivingBossByMetadata((LivingEntity) event.getDamager());
 
                 if(BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R1 || BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R2 ||
                         BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R3) {

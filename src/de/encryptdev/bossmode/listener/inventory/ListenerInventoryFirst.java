@@ -3,44 +3,42 @@ package de.encryptdev.bossmode.listener.inventory;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.boss.util.BossManager;
-import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
 /**
  * Created by EncryptDev
  */
-public class ListenerInventoryFirst implements Listener {
+public class ListenerInventoryFirst extends InventoryListenerAdapter {
 
-    @EventHandler
-    public void on(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
+    private BossManager bossManager;
 
-        if(CheckNull.checkNull(event))
-            return;
+    public ListenerInventoryFirst(BossManager bossManager) {
+        this.bossManager = bossManager;
+    }
 
-        if(event.getInventory().getName().equalsIgnoreCase("§eNEW BOSS | CHANGE BOSS")) {
-            event.setCancelled(true);
-            String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
+    @Override
+    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+        if (inventory.getName().equalsIgnoreCase("§eNEW BOSS | CHANGE BOSS")) {
+            String itemName = itemStack.getItemMeta().getDisplayName();
 
-            switch(itemName) {
+            switch (itemName) {
                 case "§5§lNew boss":
                     player.openInventory(BossMode.getInstance().getInventoryStorage().changeEntityType());
-                    BossMode.getInstance().getBossManager().getEditors().add(player);
+                    bossManager.getEditors().add(player);
                     break;
                 case "§eSpawner":
                     player.closeInventory();
 
-                    if(BossMode.getInstance().getBossManager().getBosses().isEmpty()) {
+                    if (bossManager.getBosses().isEmpty()) {
                         player.sendMessage(BossMode.getInstance().getTranslatedMessage("emptyBossList"));
-                        return;
+                        return true;
                     }
 
-                    List<IBoss> allBosses = BossMode.getInstance().getBossManager().getBosses();
+                    List<IBoss> allBosses = bossManager.getBosses();
 
                     player.sendMessage("§7-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
@@ -49,18 +47,18 @@ public class ListenerInventoryFirst implements Listener {
 
                     player.sendMessage("§7-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
                     player.sendMessage(BossMode.getInstance().getTranslatedMessage("writeIdNow"));
-                    BossMode.getInstance().getBossManager().getEditors().add(player);
-                    BossMode.getInstance().getBossManager().getChatCommand().put(player, BossManager.CHAT_COMMAND_SPAWNER);
+                    bossManager.getEditors().add(player);
+                    bossManager.getChatCommand().put(player, BossManager.CHAT_COMMAND_SPAWNER);
                     break;
                 case "§5§lEdit boss":
                     player.closeInventory();
 
-                    if(BossMode.getInstance().getBossManager().getBosses().isEmpty()) {
+                    if (bossManager.getBosses().isEmpty()) {
                         player.sendMessage(BossMode.getInstance().getTranslatedMessage("emptyBossList"));
-                        return;
+                        return true;
                     }
 
-                    List<IBoss> allBosses0 = BossMode.getInstance().getBossManager().getBosses();
+                    List<IBoss> allBosses0 = bossManager.getBosses();
 
                     player.sendMessage("§7-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
 
@@ -69,14 +67,14 @@ public class ListenerInventoryFirst implements Listener {
 
                     player.sendMessage("§7-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
                     player.sendMessage(BossMode.getInstance().getTranslatedMessage("writeIdNow"));
-                    BossMode.getInstance().getBossManager().getEditBoss().add(player);
-                    BossMode.getInstance().getBossManager().getEditors().add(player);
-                    BossMode.getInstance().getBossManager().getChatCommand().put(player, BossManager.CHAT_COMMAND_EDIT_BOSS);
+                    bossManager.getEditBoss().add(player);
+                    bossManager.getEditors().add(player);
+                    bossManager.getChatCommand().put(player, BossManager.CHAT_COMMAND_EDIT_BOSS);
                     break;
             }
 
         }
-
+        return true;
     }
 
 }

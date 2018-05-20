@@ -3,6 +3,7 @@ package de.encryptdev.bossmode.boss.util;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.Boss;
 import de.encryptdev.bossmode.boss.IBoss;
+import de.encryptdev.bossmode.boss.special.ArmySpecialAttack;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
 import org.bukkit.Location;
 import org.bukkit.block.Biome;
@@ -42,6 +43,7 @@ public class BossEditor {
     private Biome biome;
     private List<SpecialAttack> specialAttacks;
     private boolean finish;
+    private int amountArmy;
 
     private List<String> nearAttackEntities;
     private boolean lookAtPlayer;
@@ -74,6 +76,11 @@ public class BossEditor {
         this.spawnLocation = spawnLocation;
         this.biome = biome;
         this.specialAttacks = specialAttacks;
+        if(!specialAttacks.isEmpty()) {
+            for(SpecialAttack sa : specialAttacks)
+                if(sa.getClass().equals(ArmySpecialAttack.class))
+                    this.amountArmy = ((ArmySpecialAttack) sa).getAmount();
+        }
         this.finish = false;
         this.nearAttackEntities = nearAttackEntities;
         this.lookAtPlayer = lookAtPlayer;
@@ -192,6 +199,14 @@ public class BossEditor {
 
     public void addSpecialAttack(SpecialAttack specialAttack) {
         this.specialAttacks.add(specialAttack);
+    }
+
+    public void setAmountArmy(int amountArmy) {
+        this.amountArmy = amountArmy;
+    }
+
+    public int getAmountArmy() {
+        return amountArmy;
     }
 
     public void setSpawnAmount(int spawnAmount) {

@@ -1,72 +1,58 @@
 package de.encryptdev.bossmode.listener.inventory;
 
 import de.encryptdev.bossmode.BossMode;
-import de.encryptdev.bossmode.boss.IBoss;
+import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.util.BossManager;
-import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by EncryptDev
  */
-public class ListenerInventorySpawnerSettings implements Listener {
+public class ListenerInventorySpawnerSettings extends InventoryListenerAdapter {
 
-    @EventHandler
-    public void on(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
+    private BossManager bossManager;
 
-        if(CheckNull.checkNull(event))
-            return;
+    public ListenerInventorySpawnerSettings(BossManager bossManager) {
+        this.bossManager = bossManager;
+    }
 
-        if(event.getInventory().getName().equalsIgnoreCase("§eSpawner Settings")) {
-            String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
+    @Override
+    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+        if (inventory.getName().equalsIgnoreCase("§eSpawner Settings")) {
+            String itemName = itemStack.getItemMeta().getDisplayName();
 
-            switch(itemName) {
+            switch (itemName) {
                 case "§eDelay":
-                    player.closeInventory();
-                    BossMode.getInstance().getBossManager().getChatCommand().put(player, BossManager.CHAT_COMMAND_SPAWNER_DELAY);
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("setDelayClosedInventory"));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_DELAY));
                     break;
                 case "§eMin Spawn Delay":
-                    player.closeInventory();
-                    BossMode.getInstance().getBossManager().getChatCommand().put(player, BossManager.CHAT_COMMAND_SPAWNER_MIN_DELAY);
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("setMinSpawnDelayClosedInventory"));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_MIN_DELAY));
                     break;
                 case "§eMax Spawn Delay":
-                    player.closeInventory();
-                    BossMode.getInstance().getBossManager().getChatCommand().put(player, BossManager.CHAT_COMMAND_SPAWNER_MAX_DELAY);
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("setMaxSpawnDelayClosedInventory"));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_MAX_DELAY));
                     break;
                 case "§eRequired Player Range":
-                    player.closeInventory();
-                    BossMode.getInstance().getBossManager().getChatCommand().put(player, BossManager.CHAT_COMMAND_SPAWNER_REQUIRED_PLAYERS_RANGE);
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("setRequiredPlayerRangeClosedInventory"));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_REQUIRED_PLAYERS_RANGE));
                     break;
                 case "§eSpawn Count":
-                    player.closeInventory();
-                    BossMode.getInstance().getBossManager().getChatCommand().put(player, BossManager.CHAT_COMMAND_SPAWNER_SPAWN_AMOUNT);
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("setSpawnCountClosedInventory"));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_SPAWN_COUNT));
                     break;
                 case "§eSpawn Range":
-                    player.closeInventory();
-                    BossMode.getInstance().getBossManager().getChatCommand().put(player, BossManager.CHAT_COMMAND_SPAWNER_SPAWN_RANGE);
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("setSpawnRangeClosedInventory"));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_SPAWN_RANGE));
                     break;
                 case "§eFinish":
-                    ItemStack itemStack = BossMode.getInstance().getBossManager().createSpawner(BossMode.getInstance().getBossManager().getSpawnerEditor(player));
-                    player.getInventory().addItem(itemStack);
+                    ItemStack itemStack0 = bossManager.createSpawner(bossManager.getSpawnerEditor(player));
+                    player.getInventory().addItem(itemStack0);
                     player.sendMessage(BossMode.getInstance().getTranslatedMessage("buildSpawner"));
-                    BossMode.getInstance().getBossManager().getPlayerSpawnerEditor().remove(player);
+                    bossManager.getPlayerSpawnerEditor().remove(player);
                     player.closeInventory();
                     break;
             }
 
         }
-
+        return true;
     }
 
 }

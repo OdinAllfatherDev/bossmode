@@ -2,27 +2,26 @@ package de.encryptdev.bossmode.listener.inventory;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
-import de.encryptdev.bossmode.util.CheckNull;
+import de.encryptdev.bossmode.boss.util.BossManager;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by EncryptDev
  */
-public class ListenerInventoryEquipment implements Listener {
-
-    @EventHandler
-    public void on(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
-
-        if (CheckNull.checkNull(event))
-            return;
-
-        if (event.getInventory().getName().equalsIgnoreCase("§bEquipment")) {
-            event.setCancelled(true);
-            String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
+public class ListenerInventoryEquipment extends InventoryListenerAdapter {
+    
+    private BossManager bossManager;
+    
+    public ListenerInventoryEquipment(BossManager bossManager) {
+        this.bossManager = bossManager;
+    }
+    
+    @Override
+    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+        if (inventory.getName().equalsIgnoreCase("§bEquipment")) {
+            String itemName = itemStack.getItemMeta().getDisplayName();
 
             switch (itemName) {
                 case "§bArmor - Helmet":
@@ -47,11 +46,12 @@ public class ListenerInventoryEquipment implements Listener {
                     player.openInventory(BossMode.getInstance().getInventoryStorage().openPutContentInventory(InventoryStorage.PutType.OFF_HAND));
                     break;
                 case "§eBack":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(BossMode.getInstance().getBossManager().getBossEditor(player).isNaturalSpawn()));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
                     break;
             }
 
         }
+        return true;
     }
 
 }

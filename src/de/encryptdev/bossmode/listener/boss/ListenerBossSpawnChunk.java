@@ -2,6 +2,7 @@ package de.encryptdev.bossmode.listener.boss;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.IBoss;
+import de.encryptdev.bossmode.boss.util.BossManager;
 import de.encryptdev.bossmode.boss.util.BossUtil;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -17,14 +18,20 @@ import java.util.Random;
  */
 public class ListenerBossSpawnChunk implements Listener {
 
-    private Random random = new Random();
-
+    private Random random;
+    private BossManager bossManager;
+    
+    public ListenerBossSpawnChunk(BossManager bossManager) {
+        this.random = new Random();
+        this.bossManager = bossManager;
+    }
+    
     @EventHandler
     public void on(ChunkLoadEvent event) {
         if(BossMode.getInstance().getConfig().getBoolean("bossSpawnByChunkLoading")) {
             Chunk chunk = event.getChunk();
 
-            for(IBoss boss : BossMode.getInstance().getBossManager().getBosses())
+            for(IBoss boss : bossManager.getBosses())
                 if(chunk.getBlock(1, 1, 1).getBiome() == boss.getBossSettings().getBiome())
                     if(boss.getBossSettings().isNaturalSpawn()) {
                         List<Location> surface = BossUtil.getChunkSurface(chunk);

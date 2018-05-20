@@ -1,55 +1,50 @@
 package de.encryptdev.bossmode.listener.inventory;
 
 import de.encryptdev.bossmode.BossMode;
+import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.special.TeleportSpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossManager;
-import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by EncryptDev
  */
-public class ListenerInventorySpecialAttack implements Listener {
+public class ListenerInventorySpecialAttack extends InventoryListenerAdapter {
 
-    @EventHandler
-    public void on(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
+    private BossManager bossManager;
 
-        if(CheckNull.checkNull(event))
-            return;
+    public ListenerInventorySpecialAttack(BossManager bossManager) {
+        this.bossManager = bossManager;
+    }
 
-        if(event.getInventory().getName().equalsIgnoreCase("§5Special Attacks")) {
-            event.setCancelled(true);
-            String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
+    @Override
+    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+        if (inventory.getName().equalsIgnoreCase("§5Special Attacks")) {
+            String itemName = itemStack.getItemMeta().getDisplayName();
 
-            switch(itemName) {
+            switch (itemName) {
                 case "§bMessages":
                     player.closeInventory();
                     player.sendMessage(BossMode.getInstance().getTranslatedMessage("messagesSpecialAttack"));
                     player.sendMessage(BossMode.getInstance().getTranslatedMessage("useColorCodes"));
-                    BossMode.getInstance().getBossManager().getChatCommand().put(player, BossManager.CHAT_COMMAND_SPECIAL_ATTACK_MESSAGE);
+                    bossManager.getChatCommand().put(player, BossManager.CHAT_COMMAND_SPECIAL_ATTACK_MESSAGE);
                     break;
                 case "§5Teleport":
                     BossMode.getInstance().getBossManager()
                             .getBossEditor(player).addSpecialAttack(new TeleportSpecialAttack());
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(BossMode.getInstance().getBossManager().getBossEditor(player).isNaturalSpawn()));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
                     break;
                 case "§eStomp":
-                    player.closeInventory();
-                    BossMode.getInstance().getBossManager().getChatCommand().put(player, BossManager.CHAT_COMMAND_SPECIAL_ATTACK_STRENGTH);
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("strengthSpecialAttack"));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPECIAL_ATTACK_STOMP_STRENGTH));
                     break;
                 case "§eArmy":
-                    player.closeInventory();
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("amountOfEntitySpecialAttack"));
-                    BossMode.getInstance().getBossManager().getChatCommand()
-                            .put(player, BossManager.CHAT_COMMAND_SPECIAL_ATTACK_ARMY);
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPECIAL_ATTACK_ARMY_AMOUNT));
                     break;
             }
         }
+        return true;
     }
 
 }

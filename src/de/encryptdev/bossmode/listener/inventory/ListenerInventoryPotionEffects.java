@@ -2,29 +2,28 @@ package de.encryptdev.bossmode.listener.inventory;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.util.BossEditor;
-import de.encryptdev.bossmode.util.CheckNull;
+import de.encryptdev.bossmode.boss.util.BossManager;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 /**
  * Created by EncryptDev
  */
-public class ListenerInventoryPotionEffects implements Listener {
+public class ListenerInventoryPotionEffects extends InventoryListenerAdapter {
 
-    @EventHandler
-    public void on(InventoryClickEvent event) {
-        Player player = (Player) event.getWhoClicked();
-
-        if (CheckNull.checkNull(event))
-            return;
-
-        if (event.getInventory().getName().equalsIgnoreCase("§ePotion Effects")) {
-            event.setCancelled(true);
-            String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
+    private BossManager bossManager;
+    
+    public ListenerInventoryPotionEffects(BossManager bossManager) {
+        this.bossManager = bossManager;
+    }
+    
+    @Override
+    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+        if (inventory.getName().equalsIgnoreCase("§ePotion Effects")) {
+            String itemName = itemStack.getItemMeta().getDisplayName();
 
             switch (itemName) {
                 case "§eRegeneration":
@@ -52,11 +51,11 @@ public class ListenerInventoryPotionEffects implements Listener {
                     player.openInventory(BossMode.getInstance().getInventoryStorage().potionEffectSettings("§ePoison"));
                     break;
                 case "§eClear":
-                    BossMode.getInstance().getBossManager().getBossEditor(player).clearPotionEffect();
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(BossMode.getInstance().getBossManager().getBossEditor(player).isNaturalSpawn()));
+                    bossManager.getBossEditor(player).clearPotionEffect();
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
                     break;
                 case "§eBack":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(BossMode.getInstance().getBossManager().getBossEditor(player).isNaturalSpawn()));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
                     break;
                 case "§eBlindness":
                     player.openInventory(BossMode.getInstance().getInventoryStorage().potionEffectSettings("§eBlindness"));
@@ -71,14 +70,13 @@ public class ListenerInventoryPotionEffects implements Listener {
                     player.openInventory(BossMode.getInstance().getInventoryStorage().potionEffectSettings("§eWither"));
                     break;
             }
-        } else if (event.getInventory().getTitle().startsWith("§eSettings")) {
-            event.setCancelled(true);
-            String title = event.getInventory().getTitle();
+        } else if (inventory.getTitle().startsWith("§eSettings")) {
+            String title = inventory.getTitle();
             String potionEffect = title.split(" ")[2].trim();
 
-            String itemName = event.getCurrentItem().getItemMeta().getDisplayName();
+            String itemName = itemStack.getItemMeta().getDisplayName();
 
-            BossEditor editor = BossMode.getInstance().getBossManager().getBossEditor(player);
+            BossEditor editor = bossManager.getBossEditor(player);
 
             switch (itemName) {
                 case "§eTier 2":
@@ -200,7 +198,7 @@ public class ListenerInventoryPotionEffects implements Listener {
 
 
         }
-
+        return true;
     }
 
 }
