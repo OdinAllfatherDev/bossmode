@@ -21,7 +21,7 @@ public class ListenerInventoryFirst extends InventoryListenerAdapter {
     }
 
     @Override
-    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
         if (inventory.getName().equalsIgnoreCase("§eNEW BOSS | CHANGE BOSS")) {
             String itemName = itemStack.getItemMeta().getDisplayName();
 
@@ -35,7 +35,7 @@ public class ListenerInventoryFirst extends InventoryListenerAdapter {
 
                     if (bossManager.getBosses().isEmpty()) {
                         player.sendMessage(BossMode.getInstance().getTranslatedMessage("emptyBossList"));
-                        return true;
+                        return new AdapterCallback(inventory, true);
                     }
 
                     List<IBoss> allBosses = bossManager.getBosses();
@@ -55,7 +55,7 @@ public class ListenerInventoryFirst extends InventoryListenerAdapter {
 
                     if (bossManager.getBosses().isEmpty()) {
                         player.sendMessage(BossMode.getInstance().getTranslatedMessage("emptyBossList"));
-                        return true;
+                        return new AdapterCallback(inventory, true);
                     }
 
                     List<IBoss> allBosses0 = bossManager.getBosses();
@@ -74,7 +74,7 @@ public class ListenerInventoryFirst extends InventoryListenerAdapter {
             }
 
         }
-        return true;
+        return new AdapterCallback(inventory, true);
     }
 
 }

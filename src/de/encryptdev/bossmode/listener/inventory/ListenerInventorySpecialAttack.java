@@ -20,7 +20,7 @@ public class ListenerInventorySpecialAttack extends InventoryListenerAdapter {
     }
 
     @Override
-    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
         if (inventory.getName().equalsIgnoreCase("§5Special Attacks")) {
             String itemName = itemStack.getItemMeta().getDisplayName();
 
@@ -44,7 +44,7 @@ public class ListenerInventorySpecialAttack extends InventoryListenerAdapter {
                     break;
             }
         }
-        return true;
+        return new AdapterCallback(inventory, true);
     }
 
 }

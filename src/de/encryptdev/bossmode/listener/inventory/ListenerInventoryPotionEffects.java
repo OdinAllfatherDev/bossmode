@@ -21,7 +21,7 @@ public class ListenerInventoryPotionEffects extends InventoryListenerAdapter {
     }
 
     @Override
-    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
         if (inventory.getName().equalsIgnoreCase("§ePotion Effects")) {
             String itemName = itemStack.getItemMeta().getDisplayName();
 
@@ -199,7 +199,7 @@ public class ListenerInventoryPotionEffects extends InventoryListenerAdapter {
 
 
         }
-        return true;
+        return new AdapterCallback(inventory, true);
     }
 
 }

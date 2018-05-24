@@ -23,7 +23,7 @@ public class ListenerInventoryBiome extends InventoryListenerAdapter {
     }
 
     @Override
-    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
         if(inventory.getName().equalsIgnoreCase("§eBiome 1")) {
             String itemName = itemStack.getItemMeta().getDisplayName();
             if(itemName.equalsIgnoreCase("§eNext")) {
@@ -67,6 +67,6 @@ public class ListenerInventoryBiome extends InventoryListenerAdapter {
                 player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(true));
             }
         }
-        return true;
+        return new AdapterCallback(inventory, true);
     }
 }

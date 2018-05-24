@@ -19,7 +19,7 @@ public class ListenerInventoryChangeEntityType extends InventoryListenerAdapter 
     }
     
     @Override
-    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
         if (inventory.getName().equalsIgnoreCase("§eSet the entity type")) {
             String itemName = itemStack.getItemMeta().getDisplayName();
             String normalName = itemName.substring(4, itemName.length());
@@ -63,6 +63,6 @@ public class ListenerInventoryChangeEntityType extends InventoryListenerAdapter 
             }
 
         }
-        return true;
+        return new AdapterCallback(inventory, true);
     }
 }

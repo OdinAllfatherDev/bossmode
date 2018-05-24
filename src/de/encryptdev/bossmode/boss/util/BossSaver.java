@@ -74,8 +74,13 @@ public class BossSaver {
 
         fileManager.set("near_attack", boss.getBossSettings().getNearAttackEntities());
         fileManager.set("look_at_player", boss.getBossSettings().isLookAtPlayer());
-        fileManager.set("mount.type", boss.getMount().getType().toString());
-        fileManager.set("mount.health", boss.getMount().getHealth());
+        if (boss.getMount() == null) {
+            fileManager.set("mount.type", null);
+            fileManager.set("mount.health", 20.0F);
+        } else {
+            fileManager.set("mount.type", boss.getMount().getType().toString());
+            fileManager.set("mount.health", boss.getMount().getHealth());
+        }
 
         if (!edit) {
             BossMode.getInstance().getConfig().set("bossId", BossUtil.getBossIds() + 1);

@@ -25,7 +25,7 @@ public class ListenerInventoryCounterType extends InventoryListenerAdapter {
     }
 
     @Override
-    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
 
         for (InventoryStorage.CounterType counterType : InventoryStorage.CounterType.values()) {
             if (inventory.getName().equalsIgnoreCase(counterType.getInventoryName())) {
@@ -167,7 +167,7 @@ public class ListenerInventoryCounterType extends InventoryListenerAdapter {
             }
         }
 
-        return true;
+        return new AdapterCallback(inventory, true);
     }
 
     private void changeMiddleItem(Inventory inventory, InventoryStorage.CounterType counterType, double amount) {

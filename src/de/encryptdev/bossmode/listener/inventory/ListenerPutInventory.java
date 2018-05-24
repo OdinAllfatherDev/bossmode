@@ -20,7 +20,7 @@ public class ListenerPutInventory extends InventoryListenerAdapter {
     }
     
     @Override
-    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
         if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.ARMOR_HELMET.getInvName())) {
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
@@ -118,7 +118,7 @@ public class ListenerPutInventory extends InventoryListenerAdapter {
 
                 }
         }
-        return true;
+        return new AdapterCallback(inventory, true);
     }
 
     private boolean checkEmptyInventory(Inventory inventory) {

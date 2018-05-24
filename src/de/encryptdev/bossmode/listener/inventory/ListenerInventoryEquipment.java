@@ -19,7 +19,7 @@ public class ListenerInventoryEquipment extends InventoryListenerAdapter {
     }
     
     @Override
-    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
         if (inventory.getName().equalsIgnoreCase("§bEquipment")) {
             String itemName = itemStack.getItemMeta().getDisplayName();
 
@@ -51,7 +51,7 @@ public class ListenerInventoryEquipment extends InventoryListenerAdapter {
             }
 
         }
-        return true;
+        return new AdapterCallback(inventory, true);
     }
 
 }

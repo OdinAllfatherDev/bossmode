@@ -19,17 +19,17 @@ public class ListenerInventoryMountType extends InventoryListenerAdapter {
     }
 
     @Override
-    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
         if (inventory.getName().equalsIgnoreCase("§eMountTypes")) {
             String itemName = itemStack.getItemMeta().getDisplayName();
 
             if(itemName.equalsIgnoreCase("§eBack")) {
                 player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
-                return true;
+                return new AdapterCallback(inventory, true);
             } else if(itemName.equalsIgnoreCase("§4Reset")) {
                 bossManager.getBossEditor(player).setMount(null, 20.0);
                 player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
-                return true;
+                return new AdapterCallback(inventory, true);
             }
 
             switch (itemName) {
@@ -44,6 +44,6 @@ public class ListenerInventoryMountType extends InventoryListenerAdapter {
                     break;
             }
         }
-        return true;
+        return new AdapterCallback(inventory, true);
     }
 }

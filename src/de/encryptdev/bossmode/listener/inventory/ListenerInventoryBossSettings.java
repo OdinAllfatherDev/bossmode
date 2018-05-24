@@ -26,7 +26,7 @@ public class ListenerInventoryBossSettings extends InventoryListenerAdapter {
     }
 
     @Override
-    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
         if (inventory.getName().equalsIgnoreCase("§eBoss Settings")) {
             String itemName = itemStack.getItemMeta().getDisplayName();
 
@@ -130,6 +130,6 @@ public class ListenerInventoryBossSettings extends InventoryListenerAdapter {
             }
 
         }
-        return true;
+        return new AdapterCallback(inventory, true);
     }
 }

@@ -22,7 +22,7 @@ public class ListenerInventoryEntityTypes extends InventoryListenerAdapter {
     }
     
     @Override
-    public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
         if (inventory.getName().startsWith("§4Entity Type #")) {
             int side = Integer.parseInt(inventory.getName().split("#")[1]);
 
@@ -33,7 +33,7 @@ public class ListenerInventoryEntityTypes extends InventoryListenerAdapter {
             if (side == 1) {
                 if (itemName.equalsIgnoreCase("§eFinish")) {
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
-                    return true;
+                    return new AdapterCallback(inventory, true);
                 } else if (itemName.equalsIgnoreCase("§eNext")) {
                     player.openInventory(BossMode.getInstance().getInventoryStorage().entityTypesInventory(2));
                     inventory.setItem(39, ItemCreator.getItem(Material.GOLD_NUGGET, "§eEntities", be.nearEntitySize()));
@@ -54,7 +54,7 @@ public class ListenerInventoryEntityTypes extends InventoryListenerAdapter {
             } else if (side == 2) {
                 if (itemName.equalsIgnoreCase("§eFinish")) {
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
-                    return true;
+                    return new AdapterCallback(inventory, true);
                 }
                 if (itemName.equalsIgnoreCase("§eBack")) {
                     player.openInventory(BossMode.getInstance().getInventoryStorage().entityTypesInventory(1));
@@ -74,7 +74,7 @@ public class ListenerInventoryEntityTypes extends InventoryListenerAdapter {
             }
         }
 
-        return true;
+        return new AdapterCallback(inventory, true);
     }
 
 }
