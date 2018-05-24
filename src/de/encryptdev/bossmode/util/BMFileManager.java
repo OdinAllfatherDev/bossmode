@@ -73,6 +73,10 @@ public class BMFileManager {
         return this.configuration.getConfigurationSection(path);
     }
 
+    public boolean deleteFile() {
+        return this.file.delete();
+    }
+
     public boolean contains(String path) {
         return this.configuration.contains(path);
     }

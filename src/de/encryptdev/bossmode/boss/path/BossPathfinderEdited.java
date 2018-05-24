@@ -3,6 +3,7 @@ package de.encryptdev.bossmode.boss.path;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.ref.Reflection;
+import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 
 import java.util.List;
@@ -70,7 +71,8 @@ public class BossPathfinderEdited extends Reflection {
                 if (handleLivingEntity.getClass().equals(getNMSClass("EntitySpider")) || handleLivingEntity.getClass().equals("EntityCaveSpider")) {
                     goalSelectorR(2, pathfinderCreator.createPafhinderGoalMeleeAttackSpider(handleLivingEntity));
                     targetSelectorR(2, pathfinderCreator.createPathfinderNearestAttackableTargetSpider(handleLivingEntity));
-                } else if (handleLivingEntity.getClass().equals(getNMSClass("EntitySkeleton")))
+                } else if (handleLivingEntity.getClass().equals(getNMSClass("EntitySkeleton")) && (iBoss.getBossSettings().getEquipment().getMainHand().getType()
+                        == Material.BOW || iBoss.getBossSettings().getEquipment().getOffHand().getType() == Material.BOW))
                     goalSelectorR(2, pathfinderCreator.createPathfinderGoalArrowAttack(handleLivingEntity, iBoss.getBossSettings().getSpeed()));
                 else if (handleLivingEntity.getClass().equals(getNMSClass("EntityCreeper")))
                     goalSelectorR(2, pathfinderCreator.createPatfhinderCreeper(handleLivingEntity));

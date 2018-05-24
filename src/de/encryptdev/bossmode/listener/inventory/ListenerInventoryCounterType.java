@@ -2,6 +2,8 @@ package de.encryptdev.bossmode.listener.inventory;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
+import de.encryptdev.bossmode.boss.mount.Mount;
+import de.encryptdev.bossmode.boss.mount.MountType;
 import de.encryptdev.bossmode.boss.special.ArmySpecialAttack;
 import de.encryptdev.bossmode.boss.special.StompSpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossManager;
@@ -144,6 +146,18 @@ public class ListenerInventoryCounterType extends InventoryListenerAdapter {
                                 break;
                             case SPEED:
                                 bossManager.getBossEditor(player).setSpeed(amount);
+                                player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
+                                break;
+                            case MOUNT_HEALTH_BAT:
+                                bossManager.getBossEditor(player).setMount(MountType.BAT, amount);
+                                player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
+                                break;
+                            case MOUNT_HEALTH_COW:
+                                bossManager.getBossEditor(player).setMount(MountType.COW, amount);
+                                player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
+                                break;
+                            case MOUNT_HEALTH_PIG:
+                                bossManager.getBossEditor(player).setMount(MountType.PIG, amount);
                                 player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
                                 break;
                         }

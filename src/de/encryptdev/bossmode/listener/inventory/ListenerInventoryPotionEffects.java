@@ -15,11 +15,11 @@ import org.bukkit.potion.PotionEffectType;
 public class ListenerInventoryPotionEffects extends InventoryListenerAdapter {
 
     private BossManager bossManager;
-    
+
     public ListenerInventoryPotionEffects(BossManager bossManager) {
         this.bossManager = bossManager;
     }
-    
+
     @Override
     public boolean listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
         if (inventory.getName().equalsIgnoreCase("§ePotion Effects")) {
@@ -72,7 +72,12 @@ public class ListenerInventoryPotionEffects extends InventoryListenerAdapter {
             }
         } else if (inventory.getTitle().startsWith("§eSettings")) {
             String title = inventory.getTitle();
-            String potionEffect = title.split(" ")[2].trim();
+            String potionEffect = "";
+            if (title.split(" ").length == 4) {
+                potionEffect = title.split(" ")[2] + " " + title.split(" ")[3];
+            } else {
+                potionEffect = title.split(" ")[2];
+            }
 
             String itemName = itemStack.getItemMeta().getDisplayName();
 
@@ -99,10 +104,6 @@ public class ListenerInventoryPotionEffects extends InventoryListenerAdapter {
                             break;
                         case "§eHealing":
                             editor.addPotionEffect(new PotionEffect(PotionEffectType.HARM, 100000, 1));
-                            player.openInventory(BossMode.getInstance().getInventoryStorage().potionEffects());
-                            break;
-                        case "§eNight Vision":
-                            editor.addPotionEffect(new PotionEffect(PotionEffectType.NIGHT_VISION, 100000, 1));
                             player.openInventory(BossMode.getInstance().getInventoryStorage().potionEffects());
                             break;
                         case "§eStrength":

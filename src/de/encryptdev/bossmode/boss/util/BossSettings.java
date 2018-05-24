@@ -76,8 +76,7 @@ public class BossSettings {
         this.specialAttackTicks = BossMode.getInstance().getConfig().getInt("specialAttackTicks");
         this.nearAttackEntities = nearAttackEntities;
         this.lookAtPlayer = lookAtPlayer;
-        this.is1_8 = BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R1 || BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R2 ||
-                BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R3;
+        this.is1_8 = BossUtil.is1_8();
     }
 
     public LivingEntity createLivingEntity(EntityType type, Location location, int livingId) {

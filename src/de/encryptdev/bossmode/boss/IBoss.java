@@ -1,5 +1,6 @@
 package de.encryptdev.bossmode.boss;
 
+import de.encryptdev.bossmode.boss.mount.Mount;
 import de.encryptdev.bossmode.boss.path.BossPathfinderEdited;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossSettings;
@@ -18,7 +19,7 @@ public interface IBoss {
 
     void spawnBoss(Location location);
 
-    BossBar getBossBar();
+
 
     String getBossName();
 
@@ -52,11 +53,11 @@ public interface IBoss {
 
     void setWorldName(String worldName);
 
-    BossPathfinderEdited editBossPathfinder();
-
-    void setBossPathfinderEdit(BossPathfinderEdited bossPathfinderEdit);
-
     void setBossSettings(BossSettings settings);
+
+    void setMount(Mount mount);
+
+    Mount getMount();
 
 
 }

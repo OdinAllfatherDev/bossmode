@@ -35,6 +35,7 @@ public class MessageSystem {
         fileManager.addDefault("killBoss", "&eYou kill %Amount% bosses");
         fileManager.addDefault("killAllBosses", "&eYou killed all bosses %Amount%");
         fileManager.addDefault("setSpecialAttackArmyChance", "&eSet the chance, when the boss get a hit to use this special attack (0 - 100)");
+        fileManager.addDefault("deleteBossSuccessful", "&eYou delete the boss successful");
         fileManager.save();
     }
 

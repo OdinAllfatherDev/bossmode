@@ -70,6 +70,9 @@ public class ListenerInventoryBossSettings extends InventoryListenerAdapter {
                 case "§eNearby Radius":
                     player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.NEARBY_RADIUS));
                     break;
+                case "§eMount":
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().mountTypes());
+                    break;
                 case "§eSpawn Radius":
                     player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWN_RADIUS));
                     break;

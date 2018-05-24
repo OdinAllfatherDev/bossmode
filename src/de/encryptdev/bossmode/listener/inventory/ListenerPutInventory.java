@@ -128,7 +128,7 @@ public class ListenerPutInventory extends InventoryListenerAdapter {
     private ItemStack getSingleItem(Inventory inventory) {
         for (ItemStack stack : inventory.getContents())
             if (stack != null)
-                if (stack.getType() != Material.DIAMOND)
+                if (stack.getType() != Material.STAINED_GLASS_PANE && stack.getType() != Material.DIAMOND)
                     return stack;
 
         return null;

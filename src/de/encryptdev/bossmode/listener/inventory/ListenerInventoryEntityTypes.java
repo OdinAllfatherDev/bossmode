@@ -39,7 +39,6 @@ public class ListenerInventoryEntityTypes extends InventoryListenerAdapter {
                     inventory.setItem(39, ItemCreator.getItem(Material.GOLD_NUGGET, "§eEntities", be.nearEntitySize()));
                 } else {
                     String str = itemName.substring(2, itemName.length());
-                    System.out.println(str);
                     Class<?> clazz = EntityTypeVersion.valueOf(str).getNmsClass();
 
                     inventory.setItem(39, ItemCreator.getItem(Material.GOLD_NUGGET, "§eEntities", be.nearEntitySize()));

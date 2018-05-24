@@ -3,6 +3,8 @@ package de.encryptdev.bossmode.boss.util;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.Boss;
 import de.encryptdev.bossmode.boss.IBoss;
+import de.encryptdev.bossmode.boss.mount.Mount;
+import de.encryptdev.bossmode.boss.mount.MountType;
 import de.encryptdev.bossmode.boss.special.*;
 import de.encryptdev.bossmode.util.BMFileManager;
 import org.bukkit.Location;
@@ -72,6 +74,8 @@ public class BossSaver {
 
         fileManager.set("near_attack", boss.getBossSettings().getNearAttackEntities());
         fileManager.set("look_at_player", boss.getBossSettings().isLookAtPlayer());
+        fileManager.set("mount.type", boss.getMount().getType().toString());
+        fileManager.set("mount.health", boss.getMount().getHealth());
 
         if (!edit) {
             BossMode.getInstance().getConfig().set("bossId", BossUtil.getBossIds() + 1);
@@ -83,26 +87,27 @@ public class BossSaver {
     }
 
     public boolean delete(IBoss iBoss) {
-        File file = new File(BossMode.getInstance().getDataFolder().getAbsolutePath() + "/bosses/boss_" + iBoss.getBossID());
-        if (!file.exists())
+        BMFileManager fileManager = new BMFileManager("boss_" + iBoss.getBossID(), "bosses");
+        boolean succesful = fileManager.deleteFile();
+        if (succesful) {
+            List<IBoss> copy = bossManager.getAllSpawnedBosses();
+
+            for (IBoss living : copy)
+                if (living.getBossID() == iBoss.getBossID()) {
+                    living.death();
+                    bossManager.getAllSpawnedBosses().remove(living);
+                }
+
+            bossManager.getBosses().remove(iBoss);
+
+            int bossId = BossMode.getInstance().getConfig().getInt("bossId");
+            BossMode.getInstance().getConfig().set("bossId", bossId - 1);
+            BossMode.getInstance().saveConfig();
+            return true;
+        } else {
             return false;
+        }
 
-        List<IBoss> copy = bossManager.getAllSpawnedBosses();
-
-        for (IBoss living : copy)
-            if (living.getBossID() == iBoss.getBossID()) {
-                living.death();
-                bossManager.getAllSpawnedBosses().remove(living);
-            }
-
-        bossManager.getBosses().remove(iBoss);
-        file.delete();
-
-        int bossId = BossMode.getInstance().getConfig().getInt("bossId");
-        BossMode.getInstance().getConfig().set("bossId", bossId - 1);
-        BossMode.getInstance().saveConfig();
-
-        return true;
     }
 
     public void loadBossFromList() {
@@ -193,6 +198,9 @@ public class BossSaver {
             }
             List<PotionEffect> potionEffects = fileManager.get("potioneffects", List.class);
 
+            String type = fileManager.get("mount.type", String.class);
+            double health = fileManager.get("mount.health", double.class);
+
             BossEquipment bossEquipment = new BossEquipment(helmet, chestplate, leggings, boots, weaponMainHand, weaponSecondHand);
 
             BossSettings settings = new BossSettings(bossId, maxHealth, bossEquipment,
@@ -204,6 +212,11 @@ public class BossSaver {
                     fileManager.get("spawn_location", Location.class), EntityType.valueOf(fileManager.get("boss_type", String.class)));
             boss.setHasSpawner(hasSpawner);
             boss.setWorldName(worldName);
+
+            if (type != null) {
+                Mount mount = new Mount(MountType.valueOf(type), health);
+                boss.setMount(mount);
+            }
 
             this.bossManager.getBosses().add(boss);
 

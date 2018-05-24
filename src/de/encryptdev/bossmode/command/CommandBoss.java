@@ -85,7 +85,18 @@ public class CommandBoss extends ACommand {
             if (args[0].equalsIgnoreCase("spawn")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player))
                     BossMode.getInstance().getBossManager().getEditors().remove(player);
-                int id = Integer.parseInt(args[1]);
+                int id = -1;
+                try {
+                    id = Integer.parseInt(args[1]);
+                } catch(NumberFormatException nfe) {
+                    player.sendMessage(BossMode.PREFIX + "It must be a number");
+                    return;
+                }
+                if(id == -1) {
+                    player.sendMessage(BossMode.PREFIX + "ID is -1, please contact me");
+                    return;
+                }
+
 
                 List<Player> all = new LinkedList<>();
                 for (Player a : Bukkit.getOnlinePlayers()) {
@@ -103,7 +114,17 @@ public class CommandBoss extends ACommand {
             } else if (args[0].equalsIgnoreCase("spawner")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player))
                     BossMode.getInstance().getBossManager().getEditors().remove(player);
-                int id = Integer.parseInt(args[1]);
+                int id = -1;
+                try {
+                    id = Integer.parseInt(args[1]);
+                } catch(NumberFormatException nfe) {
+                    player.sendMessage(BossMode.PREFIX + "It must be a number");
+                    return;
+                }
+                if(id == -1) {
+                    player.sendMessage(BossMode.PREFIX + "ID is -1, please contact me");
+                    return;
+                }
 
                 IBoss iBoss = BossMode.getInstance().getBossManager().getBoss(id);
                 if (iBoss == null) {
@@ -122,7 +143,17 @@ public class CommandBoss extends ACommand {
             } else if (args[0].equalsIgnoreCase("kill")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player))
                     BossMode.getInstance().getBossManager().getEditors().remove(player);
-                int id = Integer.parseInt(args[1]);
+                int id = -1;
+                try {
+                    id = Integer.parseInt(args[1]);
+                } catch(NumberFormatException nfe) {
+                    player.sendMessage(BossMode.PREFIX + "It must be a number");
+                    return;
+                }
+                if(id == -1) {
+                    player.sendMessage(BossMode.PREFIX + "ID is -1, please contact me");
+                    return;
+                }
                 if (BossMode.getInstance().getBossManager().getBoss(id) == null) {
                     player.sendMessage(BossMode.getInstance().getTranslatedMessage("bossNotExist").replace("%id%", String.valueOf(id)));
                     return;
@@ -146,7 +177,17 @@ public class CommandBoss extends ACommand {
             } else if (args[0].equalsIgnoreCase("info")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player))
                     BossMode.getInstance().getBossManager().getEditors().remove(player);
-                int id = Integer.parseInt(args[1]);
+                int id = -1;
+                try {
+                    id = Integer.parseInt(args[1]);
+                } catch(NumberFormatException nfe) {
+                    player.sendMessage(BossMode.PREFIX + "It must be a number");
+                    return;
+                }
+                if(id == -1) {
+                    player.sendMessage(BossMode.PREFIX + "ID is -1, please contact me");
+                    return;
+                }
 
                 IBoss boss = BossMode.getInstance().getBossManager().getBoss(id);
 
@@ -201,7 +242,17 @@ public class CommandBoss extends ACommand {
             } else if (args[0].equalsIgnoreCase("delete")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player))
                     BossMode.getInstance().getBossManager().getEditors().remove(player);
-                int id = Integer.parseInt(args[1]);
+                int id = -1;
+                try {
+                    id = Integer.parseInt(args[1]);
+                } catch(NumberFormatException nfe) {
+                    player.sendMessage(BossMode.PREFIX + "It must be a number");
+                    return;
+                }
+                if(id == -1) {
+                    player.sendMessage(BossMode.PREFIX + "ID is -1, please contact me");
+                    return;
+                }
 
                 IBoss boss = BossMode.getInstance().getBossManager().getBoss(id);
 
@@ -212,9 +263,9 @@ public class CommandBoss extends ACommand {
 
                 boolean result = BossMode.getInstance().getBossManager().deleteBoss(boss);
                 if (result) {
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("deleteBossSuccesfull"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("deleteBossSuccessful"));
                 } else {
-
+                    player.sendMessage(BossMode.PREFIX + "Boss file not deleted");
                 }
 
             }

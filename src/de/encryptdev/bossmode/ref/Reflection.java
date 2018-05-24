@@ -1,11 +1,13 @@
 package de.encryptdev.bossmode.ref;
 
+import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.util.exception.FieldNotFoundException;
 import de.encryptdev.bossmode.util.exception.MethodNotFoundException;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.*;
+import java.util.logging.Level;
 
 /**
  * Universal Reflection class
@@ -441,6 +443,15 @@ public class Reflection {
             return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + "." + className);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Class<?> getNMSClassSkipped(String className) {
+        try {
+            return Class.forName("net.minecraft.server." + Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + "." + className);
+        } catch (ClassNotFoundException e) {
+            BossMode.getLog().log(Level.INFO, "[BossMode-LOG] Skipped class: " + className);
             return null;
         }
     }

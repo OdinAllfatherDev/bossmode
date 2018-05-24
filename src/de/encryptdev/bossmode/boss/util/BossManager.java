@@ -114,8 +114,11 @@ public class BossManager {
         BossMode.getInstance().getConfig().set("livingBossId", livingId);
         BossMode.getInstance().saveConfig();
 
-        return new Boss(iBoss.getBossSettings(), livingId, iBoss.getBossName(),
+        Boss boss =  new Boss(iBoss.getBossSettings(), livingId, iBoss.getBossName(),
                 iBoss.getSpawnLocation(), iBoss.getEntityType());
+        boss.setMount(iBoss.getMount());
+
+        return boss;
     }
 
 

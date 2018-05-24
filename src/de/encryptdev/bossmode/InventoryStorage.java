@@ -1,6 +1,8 @@
 package de.encryptdev.bossmode;
 
+import de.encryptdev.bossmode.boss.mount.MountType;
 import de.encryptdev.bossmode.boss.util.BossEditor;
+import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.boss.util.EntityTypeVersion;
 import de.encryptdev.bossmode.ref.Reflection;
 import de.encryptdev.bossmode.util.ItemCreator;
@@ -99,8 +101,7 @@ public class InventoryStorage {
                 Arrays.asList("§eSet the exp, where the boss drop"));
 
         ItemStack specialAttacks;
-        if (BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R1 || BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R2 ||
-                BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R3 || BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_9_R1 ||
+        if (BossUtil.is1_8() || BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_9_R1 ||
                 BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_9_R2)
             specialAttacks = ItemCreator.getItem(Material.GOLDEN_CARROT, "§aSpecial Attack", 1, (byte) 0,
                     Arrays.asList("§eSet the special attacks"));
@@ -143,6 +144,9 @@ public class InventoryStorage {
         ItemStack nearbyRad = ItemCreator.getItem(Material.GHAST_TEAR, "§eNearby Radius", 1, (byte) 0,
                 Arrays.asList("§eSet the radius where the boss follow player"));
 
+        ItemStack mount = ItemCreator.getItem(Material.SADDLE, "§eMount", 1, (byte) 0,
+                Arrays.asList("§eSet the mount"));
+
         inventory.setItem(8, advanced);
 
         inventory.setItem(13, specialAttacks);
@@ -153,6 +157,7 @@ public class InventoryStorage {
 
         inventory.setItem(10, name);
         inventory.setItem(19, equipment);
+        inventory.setItem(20, mount);
         inventory.setItem(28, potionEffects);
         inventory.setItem(37, exp);
 
@@ -200,6 +205,7 @@ public class InventoryStorage {
 
     public Inventory openPutContentInventory(PutType type) {
         Inventory inventory = Bukkit.createInventory(null, 9, type.getInvName());
+        fillInventoryWithoutOne(inventory);
         inventory.setItem(8, ItemCreator.getItem(Material.DIAMOND, "§6§lSet"));
         return inventory;
     }
@@ -222,7 +228,7 @@ public class InventoryStorage {
                         "§eDefault: 40"));
 
         ItemStack requiredPlayerRange = ItemCreator.getItem(Material.LEASH, "§eRequired Player Range", 1, (byte) 0,
-                Arrays.asList("§eSet the maximum distance (squared) a player can be in order for this spawner to be active",
+                Arrays.asList("§eSet the maximum distance (squared)", "a player can be in order for this spawner to be active",
                         "§eDefault: 16"));
 
         ItemStack spawnCount = ItemCreator.getItem(Material.BONE, "§eSpawn Count", 1, (byte) 0,
@@ -326,23 +332,24 @@ public class InventoryStorage {
 
         fillInventory(inventory);
 
-        ItemStack regeneration = ItemCreator.getItem(Material.POTION, "§eRegeneration", 1, (byte) 8193);
-        ItemStack swifftness = ItemCreator.getItem(Material.POTION, "§eSwiftness", 1, (byte) 8194);
-        ItemStack fireRessistence = ItemCreator.getItem(Material.POTION, "§eFire Resistance", 1, (byte) 8195);
-        ItemStack healing = ItemCreator.getItem(Material.POTION, "§eHealing", 1, (byte) 8197);
+        ItemStack regeneration = ItemCreator.getItem(Material.POTION, "§eRegeneration", 1, (byte) 8193, null, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
+        ItemStack swifftness = ItemCreator.getItem(Material.POTION, "§eSwiftness", 1, (byte) 8194, null, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
+        ItemStack fireRessistence = ItemCreator.getItem(Material.POTION, "§eFire Resistance", 1, (byte) 8195, null, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
+        ItemStack healing = ItemCreator.getItem(Material.POTION, "§eHealing", 1, (byte) 8191, null, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
         ItemStack poison = ItemCreator.getItem(Material.POTION, "§ePoison", 1, (byte) 8198,
-                Arrays.asList("§eIf the boss have the poision effect,", "§eand the boss hit a player then", "§ethe player became poison"));
-        ItemStack strength = ItemCreator.getItem(Material.POTION, "§eStrength", 1, (byte) 8201);
-        ItemStack slowness = ItemCreator.getItem(Material.POTION, "§eSlowness", 1, (byte) 8202);
-        ItemStack invisibility = ItemCreator.getItem(Material.POTION, "§eInvisibility", 1, (byte) 8206);
+                Arrays.asList("§eIf the boss have the poision effect,", "§eand the boss hit a player then", "§ethe player became poison"),
+                ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
+        ItemStack strength = ItemCreator.getItem(Material.POTION, "§eStrength", 1, (byte) 8201, null, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
+        ItemStack slowness = ItemCreator.getItem(Material.POTION, "§eSlowness", 1, (byte) 8202, null, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
+        ItemStack invisibility = ItemCreator.getItem(Material.POTION, "§eInvisibility", 1, (byte) 8206, null, ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
         ItemStack blindness = ItemCreator.getItem(Material.POTION, "§eBlindness", 1, (byte) 8207, Arrays.asList("§eIf the boss have the blindness effect",
-                "§eand the boss hit a player then", "§ethe player became blindness"));
+                "§eand the boss hit a player then", "§ethe player became blindness"), ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
         ItemStack nausea = ItemCreator.getItem(Material.POTION, "§eNausea", 1, (byte) 8207, Arrays.asList("§eIf the boss have the nausea effect",
-                "§eand the boss hit a player then", "§ethe player became nausea"));
+                "§eand the boss hit a player then", "§ethe player became nausea"), ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
         ItemStack hunger = ItemCreator.getItem(Material.POTION, "§eHunger", 1, (byte) 8207, Arrays.asList("§eIf the boss have the hunger effect",
-                "§eand the boss hit a player then", "§ethe player became hunger"));
+                "§eand the boss hit a player then", "§ethe player became hunger"), ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
         ItemStack wither = ItemCreator.getItem(Material.POTION, "§eWither", 1, (byte) 8209, Arrays.asList("§eIf the boss have the wither effect",
-                "§eand the boss hit a player then", "§ethe player became wither"));
+                "§eand the boss hit a player then", "§ethe player became wither"), ItemFlag.HIDE_POTION_EFFECTS, ItemFlag.HIDE_ATTRIBUTES);
 
         ItemStack clear = ItemCreator.getItem(Material.BARRIER, "§eClear", 1, (byte) 0,
                 Arrays.asList("§eRemove all potion effects"));
@@ -372,6 +379,13 @@ public class InventoryStorage {
         ItemStack filler = ItemCreator.getItem(Material.STAINED_GLASS_PANE, "§0", 1, (byte) 15);
 
         for (int i = 0; i < inventory.getSize(); i++)
+            inventory.setItem(i, filler);
+    }
+
+    private void fillInventoryWithoutOne(Inventory inventory) {
+        ItemStack filler = ItemCreator.getItem(Material.STAINED_GLASS_PANE, "§0", 1, (byte) 15);
+
+        for (int i = 1; i < inventory.getSize(); i++)
             inventory.setItem(i, filler);
     }
 
@@ -501,6 +515,26 @@ public class InventoryStorage {
         return inventory;
     }
 
+    public Inventory mountTypes() {
+        Inventory inventory = Bukkit.createInventory(null, 9, "§eMountTypes");
+
+        ItemStack back = ItemCreator.getSkull("§eBack", Bukkit.getOfflinePlayer("MHF_ArrowDown"));
+        ItemStack reset = ItemCreator.getItem(Material.BARRIER, "§4Reset", 1, (byte) 0, Arrays.asList("§eReset the mount"));
+
+        List<ItemStack> items = new ArrayList<>();
+
+        for (MountType mt : MountType.values())
+            items.add(ItemCreator.getItem(Material.MONSTER_EGG, "§a" + BossUtil.makeEnumNameNormal(mt), 1, (byte) mt.getEntityType().getTypeId()));
+
+        for (int i = 0; i < items.size(); i++)
+            inventory.setItem(i, items.get(i));
+
+        inventory.setItem(7, reset);
+        inventory.setItem(8, back);
+
+        return inventory;
+    }
+
     public enum CounterType {
 
         HEALTH("§eHealth", false, 20.0),
@@ -513,15 +547,18 @@ public class InventoryStorage {
         NEARBY_RADIUS("§eNearby Radius", false, 100.0),
         SPAWN_RADIUS("§eSpawn Raidus", false, 5.0),
         SPECIAL_ATTACK_STOMP_STRENGTH("§eSpecialAttack Stomp Strength", false, 10.0),
-        SPAWNER_DELAY("§eSpawner Delay", false, 20.0),
-        SPAWNER_MIN_DELAY("§eSpawner Min Delay", false, 200.0),
-        SPAWNER_MAX_DELAY("§eSpawner Max Delay", false, 800.0),
-        SPAWNER_REQUIRED_PLAYERS_RANGE("§eSpawner Required Players Range", false, 16.0),
-        SPAWNER_SPAWN_RANGE("§eSpawner Spawn Range", false, 4.0),
-        SPAWNER_SPAWN_COUNT("§eSpawner Spawn Count", false, 4.0),
+        SPAWNER_DELAY("§4Spawner Delay", false, 20.0),
+        SPAWNER_MIN_DELAY("§4Spawner Min Delay", false, 200.0),
+        SPAWNER_MAX_DELAY("§4Spawner Max Delay", false, 800.0),
+        SPAWNER_REQUIRED_PLAYERS_RANGE("§4Spawner Required Players Range", false, 16.0),
+        SPAWNER_SPAWN_RANGE("§4Spawner Spawn Range", false, 4.0),
+        SPAWNER_SPAWN_COUNT("§4Spawner Spawn Count", false, 4.0),
         DROPPED_XP("§eDropped XP", false, 100.0),
         SPECIAL_ATTACK_ARMY_CHANCE("§eSpecialAttack Army Chance", false, 10.0),
-        SPECIAL_ATTACK_ARMY_AMOUNT("§eSpecialAttack Army Amount", false, 5.0);
+        SPECIAL_ATTACK_ARMY_AMOUNT("§eSpecialAttack Army Amount", false, 5.0),
+        MOUNT_HEALTH_PIG("§4MountSettings | §aPig", false, 20.0),
+        MOUNT_HEALTH_COW("§4MountSettings | §aCow", false, 20.0),
+        MOUNT_HEALTH_BAT("§4MountSettings | §aBat", false, 20.0);
 
         private String inventoryName;
         private boolean isDecimal;
@@ -544,7 +581,9 @@ public class InventoryStorage {
         public String getInventoryName() {
             return inventoryName;
         }
+
     }
+
 
     public enum PutType {
 

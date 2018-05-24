@@ -2,6 +2,7 @@ package de.encryptdev.bossmode;
 
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.boss.util.EntityTypeVersion;
 import de.encryptdev.bossmode.command.CommandBoss;
 import de.encryptdev.bossmode.listener.ListenerChat;
 import de.encryptdev.bossmode.listener.ListenerPlayerDamageByBoss;
@@ -65,7 +66,7 @@ public class BossMode extends JavaPlugin {
 
         getCommand("boss").setExecutor(new CommandBoss());
         registerListener();
-        saveDefaultConfig();
+        loadConfig();
 
 
         log.log(Level.INFO, "-------------------------------------");
@@ -81,6 +82,20 @@ public class BossMode extends JavaPlugin {
             log.log(Level.INFO, "[BossMode-LOG] You have the new version");
         }
 
+    }
+
+    private void loadConfig() {
+        getConfig().options().copyDefaults(true);
+        getConfig().addDefault("bossId", 0);
+        getConfig().addDefault("livingBossId", 0);
+        getConfig().addDefault("bossSpawnByChunkLoading", true);
+        getConfig().addDefault("specialAttackTicks", 400);
+        getConfig().addDefault("spawnByStartNatural", true);
+        getConfig().addDefault("alert", false);
+        getConfig().addDefault("alertRad", 5.0);
+        getConfig().addDefault("alertMessage", "&4%BossName% spawned");
+        getConfig().addDefault("bossMessage", "&7[%BossName%] &e> %Message%");
+        saveConfig();
     }
 
 
@@ -111,6 +126,7 @@ public class BossMode extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new ListenerInventoryEntityTypes(bossManager), this);
         getServer().getPluginManager().registerEvents(new ListenerInventoryEquipment(bossManager), this);
         getServer().getPluginManager().registerEvents(new ListenerInventoryCounterType(bossManager), this);
+        getServer().getPluginManager().registerEvents(new ListenerInventoryMountType(bossManager), this);
     }
 
     @Override

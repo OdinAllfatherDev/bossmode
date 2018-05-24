@@ -10,7 +10,9 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by EncryptDev
@@ -90,7 +92,7 @@ public class NBTSpawnerUtil extends Reflection {
             nbtSpawnerTag = invokeMethod(tiledEntitySpawner.getClass(), "d", tiledEntitySpawner, new Class<?>[0], new Object[0]);
         else if (getVersion() == NMSVersion.V1_10_R1)
             nbtSpawnerTag = invokeMethod(tiledEntitySpawner.getClass(), "c", tiledEntitySpawner, new Class<?>[0], new Object[0]);
-        else if(getVersion() == NMSVersion.V1_8_R3 || getVersion() == NMSVersion.V1_8_R2 || getVersion() == NMSVersion.V1_8_R1 || getVersion() == NMSVersion.V1_9_R1 ||
+        else if (getVersion() == NMSVersion.V1_8_R3 || getVersion() == NMSVersion.V1_8_R2 || getVersion() == NMSVersion.V1_8_R1 || getVersion() == NMSVersion.V1_9_R1 ||
                 getVersion() == NMSVersion.V1_9_R2) {
             Object packetPlayOutEntityTileData = invokeMethod(tiledEntitySpawner.getClass(), "getUpdatePacket", tiledEntitySpawner, new Class<?>[0], new Object[0]);
             nbtSpawnerTag = getField(packetPlayOutEntityTileData.getClass(), packetPlayOutEntityTileData, "c");
@@ -122,28 +124,18 @@ public class NBTSpawnerUtil extends Reflection {
             setNBTTagValue(offHand, "Count", new NBTTagInstance<>(NBTTagClass.INT, 1, int.class));
         }
 
-        Object enchantmentsList = createNBTTagList();
+        Object enchantmentsList = createNBTTagList();//  = empty list
 
         if (equipment.getMainHand() != null) {
             if (equipment.getMainHand().getItemMeta().hasEnchants()) {
-                for (Enchantment ench : equipment.getMainHand().getItemMeta().getEnchants().keySet()) {
-                    Object enchTag = createNBTTagCompound();
-                    setNBTTagValue(enchTag, "id", new NBTTagInstance<>(NBTTagClass.INT, ench.getId(), int.class));
-                    setNBTTagValue(enchTag, "lvl", new NBTTagInstance<>(NBTTagClass.INT, equipment.getMainHand().getItemMeta().getEnchantLevel(ench), int.class));
-                    invokeMethod(enchantmentsList.getClass(), "add", enchantmentsList, new Class<?>[]{getNMSClass("NBTBase")}, new Object[]{enchTag});
-                }
+                enchantmentsList = createEnchantmentList(equipment.getMainHand().getItemMeta().getEnchants());
             }
         }
 
-        Object enchantmentsList0 = createNBTTagList();
+        Object enchantmentsList0 = createNBTTagList(); //   =emtpy list
         if (equipment.getOffHand() != null) {
             if (equipment.getOffHand().getItemMeta().hasEnchants()) {
-                for (Enchantment ench : equipment.getOffHand().getItemMeta().getEnchants().keySet()) {
-                    Object enchTag = createNBTTagCompound();
-                    setNBTTagValue(enchTag, "id", new NBTTagInstance<>(NBTTagClass.INT, ench.getId(), int.class));
-                    setNBTTagValue(enchTag, "lvl", new NBTTagInstance<>(NBTTagClass.INT, equipment.getOffHand().getItemMeta().getEnchantLevel(ench), int.class));
-                    invokeMethod(enchantmentsList0.getClass(), "add", enchantmentsList0, new Class<?>[]{getNMSClass("NBTBase")}, new Object[]{enchTag});
-                }
+                enchantmentsList0 = createEnchantmentList(equipment.getOffHand().getItemMeta().getEnchants());
             }
         }
 
@@ -171,13 +163,25 @@ public class NBTSpawnerUtil extends Reflection {
         setNBTTagObject(nbtSpawnerTag, "SpawnData", spawnData);
 
         if (getVersion() == NMSVersion.V1_12_R1) {
-            invokeMethod(tiledEntitySpawner.getClass(), "load", tiledEntitySpawner, new Class<?>[]{getNMSClass("NBTTagCompound")}, new Object[]{nbtSpawnerTag});
+            invokeMethod(getNMSClass("TileEntityMobSpawner"), "load",
+                    tiledEntitySpawner, new Class<?>[]{getNMSClass("NBTTagCompound")}, new Object[]{nbtSpawnerTag});
         } else if (getVersion() == NMSVersion.V1_11_R1 || getVersion() == NMSVersion.V1_10_R1 || getVersion() == NMSVersion.V1_9_R2 || getVersion() == NMSVersion.V1_9_R1 ||
                 getVersion() == NMSVersion.V1_8_R1 || getVersion() == NMSVersion.V1_8_R2 || getVersion() == NMSVersion.V1_8_R3) {
             invokeMethod(tiledEntitySpawner.getClass(), "a", tiledEntitySpawner, new Class<?>[]{getNMSClass("NBTTagCompound")}, new Object[]{nbtSpawnerTag});
-        }else {
+        } else {
             throw new RuntimeException("Can not found method 'a' or 'load'");
         }
+    }
+
+    public Object createEnchantmentList(Map<Enchantment, Integer> enchs) {
+        Object list = createNBTTagList();
+        for (Enchantment ench : enchs.keySet()) {
+            Object enchTag = createNBTTagCompound();
+            setNBTTagValue(enchTag, "id", new NBTTagInstance<>(NBTTagClass.INT, ench.getId(), int.class));
+            setNBTTagValue(enchTag, "lvl", new NBTTagInstance<>(NBTTagClass.INT, enchs.get(ench), int.class));
+            invokeMethod(list.getClass(), "add", list, new Class<?>[]{getNMSClass("NBTBase")}, new Object[]{enchTag});
+        }
+        return list;
     }
 
     /**
@@ -257,32 +261,6 @@ public class NBTSpawnerUtil extends Reflection {
         String enumNormal = BossUtil.makeEnumNameNormal(type);
         enumNormal = enumNormal.toLowerCase();
         return enumNormal;
-    }
-
-    private class NBTTagInstance<T> extends Reflection {
-
-        private NBTTagClass nbtTagClass;
-        private T type;
-        private Class<?> primitive;
-
-        public NBTTagInstance(NBTTagClass nbtTagClass, T type, Class<?> primitive) {
-            super(BossMode.getInstance().getNmsVersion());
-            this.nbtTagClass = nbtTagClass;
-            this.type = type;
-            this.primitive = primitive;
-        }
-
-        public Object getNBTTagCompound() {
-            return nbtTagClass == NBTTagClass.COMPOUND ? getNewInstanceClass(nbtTagClass.getNbtClass()) : null;
-        }
-
-        public Object getNBTList() {
-            return nbtTagClass == NBTTagClass.LIST ? getNewInstanceClass(nbtTagClass.getNbtClass()) : null;
-        }
-
-        public Object getInstance() {
-            return getNewInstanceConstructor(nbtTagClass.getNbtClass(), new Class<?>[]{primitive}, new Object[]{type});
-        }
     }
 
 }

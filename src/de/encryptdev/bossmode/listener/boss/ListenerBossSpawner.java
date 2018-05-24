@@ -15,11 +15,11 @@ import org.bukkit.metadata.FixedMetadataValue;
 public class ListenerBossSpawner implements Listener {
 
     private BossManager bossManager;
-    
+
     public ListenerBossSpawner(BossManager bossManager) {
         this.bossManager = bossManager;
     }
-    
+
     @EventHandler
     public void on(BlockPlaceEvent event) {
         Player player = event.getPlayer();

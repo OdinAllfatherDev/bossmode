@@ -43,7 +43,8 @@ public class ListenerClosedInventory implements Listener {
                 inventory.getName().equalsIgnoreCase("§4Advanced Settings") ||
                 inventory.getName().equalsIgnoreCase("§4Entity Type #1") ||
                 inventory.getName().equalsIgnoreCase("§4Entity Type #2") ||
-                inventory.getName().equalsIgnoreCase("§bEquipment") ) {
+                inventory.getName().equalsIgnoreCase("§bEquipment") ||
+                inventory.getName().equalsIgnoreCase("§eMountTypes")) {
 
             checkQuit(player);
 

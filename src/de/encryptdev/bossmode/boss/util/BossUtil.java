@@ -2,6 +2,7 @@ package de.encryptdev.bossmode.boss.util;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.IBoss;
+import de.encryptdev.bossmode.ref.Reflection;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -31,8 +32,8 @@ public class BossUtil {
     }
 
     public static IBoss getLivingBossByMetadata(LivingEntity entity) {
-        for(IBoss boss : BossMode.getInstance().getBossManager().getAllSpawnedBosses()) {
-            if(boss.getLivingID() == entity.getMetadata(BossSettings.META_DATA_BOSS_LIVING_ID).get(0).asInt()) {
+        for (IBoss boss : BossMode.getInstance().getBossManager().getAllSpawnedBosses()) {
+            if (boss.getLivingID() == entity.getMetadata(BossSettings.META_DATA_BOSS_LIVING_ID).get(0).asInt()) {
                 return boss;
             }
         }
@@ -57,6 +58,12 @@ public class BossUtil {
             result = String.valueOf(firstIndex).toUpperCase() + rest;
         }
         return result;
+    }
+
+    public static boolean is1_8() {
+        return BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R1
+                || BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R2
+                || BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R3;
     }
 
     /**

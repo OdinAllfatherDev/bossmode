@@ -5,12 +5,12 @@ import de.encryptdev.bossmode.boss.ai.BossAISpecialAttack;
 import de.encryptdev.bossmode.boss.event.BossDamageEvent;
 import de.encryptdev.bossmode.boss.event.BossDeathEvent;
 import de.encryptdev.bossmode.boss.event.BossSpawnEvent;
+import de.encryptdev.bossmode.boss.mount.Mount;
 import de.encryptdev.bossmode.boss.path.BossPathfinderEdited;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossSettings;
 import de.encryptdev.bossmode.ref.Reflection;
 import de.encryptdev.bossmode.util.BossBarV1_8;
-import de.encryptdev.bossmode.util.exception.BossAlreadySpawn;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -25,6 +25,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.util.HashMap;
@@ -43,7 +44,6 @@ public abstract class APIBoss implements IBoss {
     private String worldName;
     private int livingId;
     private BossBar bossBar;
-    private BossPathfinderEdited bossPathfinderEdited;
     private BossSettings bossSettings;
     private LivingEntity livingBossEntity;
     private String name;
@@ -56,6 +56,7 @@ public abstract class APIBoss implements IBoss {
     private boolean is1_8;
     private BossBarV1_8 bossBar1_8;
     private List<Player> nearbyPlayers;
+    private Mount mount;
 
     public APIBoss(BossSettings bossSettings, int livingId, String name, Location spawnLocation, EntityType type) {
         this.bossSettings = bossSettings;
@@ -164,12 +165,19 @@ public abstract class APIBoss implements IBoss {
         BossMode.getInstance().saveConfig();
         this.livingBossEntity = this.getBossSettings().createLivingEntity(type, spawnLocation, livingId);
 
+        new BukkitRunnable() {
+
+            @Override
+            public void run() {
+                if (mount != null)
+                    mount.spawn(spawnLocation, livingBossEntity);
+            }
+        }.runTaskLater(BossMode.getInstance(), 10);
         this.checkPlayers();
-
         this.worldName = livingBossEntity.getWorld().getName();
-        this.bossPathfinderEdited = new BossPathfinderEdited(this);
+        new BossPathfinderEdited(this);
 
-        this.livingBossEntity.setCustomName(name + " " + livingId);
+        this.livingBossEntity.setCustomName(name);
         createBossBar(nearbyPlayers);
         this.livingBossEntity.setCustomNameVisible(true);
         this.initAI();
@@ -199,13 +207,6 @@ public abstract class APIBoss implements IBoss {
         this.name = name;
     }
 
-    @Override
-    public void setBossPathfinderEdit(BossPathfinderEdited bossPathfinderEdited) {
-        if (this.livingBossEntity != null)
-            throw new BossAlreadySpawn(this.getBossID());
-        this.bossPathfinderEdited = bossPathfinderEdited;
-    }
-
     private void executeSpecialAttack() {
         task0.put(this, Bukkit.getScheduler().runTaskTimer(BossMode.getInstance(), () -> {
 
@@ -228,11 +229,6 @@ public abstract class APIBoss implements IBoss {
     @Override
     public void setBossSettings(BossSettings bossSettings) {
         this.bossSettings = bossSettings;
-    }
-
-    @Override
-    public org.bukkit.boss.BossBar getBossBar() {
-        return bossBar;
     }
 
     @Override
@@ -285,6 +281,9 @@ public abstract class APIBoss implements IBoss {
             nearbyPlayers.forEach(player -> bossBar1_8.clear());
         }
 
+        if (this.mount != null)
+            this.mount.die();
+
         if (this.livingBossEntity != null && bossSettings.getNaturalDrops() != null)
             if (!this.bossSettings.getNaturalDrops().isEmpty())
                 for (ItemStack item : bossSettings.getNaturalDrops())
@@ -327,13 +326,14 @@ public abstract class APIBoss implements IBoss {
         }
     }
 
-    public List<Player> getNearbyPlayers() {
-        return nearbyPlayers;
+    @Override
+    public void setMount(Mount mount) {
+        this.mount = mount;
     }
 
     @Override
-    public BossPathfinderEdited editBossPathfinder() {
-        return bossPathfinderEdited;
+    public Mount getMount() {
+        return mount;
     }
 
     @Override

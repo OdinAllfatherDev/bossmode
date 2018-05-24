@@ -3,6 +3,8 @@ package de.encryptdev.bossmode.boss.util;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.Boss;
 import de.encryptdev.bossmode.boss.IBoss;
+import de.encryptdev.bossmode.boss.mount.Mount;
+import de.encryptdev.bossmode.boss.mount.MountType;
 import de.encryptdev.bossmode.boss.special.ArmySpecialAttack;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
 import org.bukkit.Location;
@@ -44,6 +46,8 @@ public class BossEditor {
     private List<SpecialAttack> specialAttacks;
     private boolean finish;
     private int amountArmy;
+    private MountType mountType;
+    private double mountHealth;
 
     private List<String> nearAttackEntities;
     private boolean lookAtPlayer;
@@ -84,6 +88,8 @@ public class BossEditor {
         this.finish = false;
         this.nearAttackEntities = nearAttackEntities;
         this.lookAtPlayer = lookAtPlayer;
+        this.mountType = null;
+        this.mountHealth = 20;
     }
 
     public BossEditor(IBoss iboss) {
@@ -149,10 +155,6 @@ public class BossEditor {
 
     public void clearPotionEffect() {
         this.potionEffects.clear();
-    }
-
-    public void setChanceToSpawnByEntitySpawn(float chanceToSpawnByEntitySpawn) {
-        this.chanceToSpawnByEntitySpawn = chanceToSpawnByEntitySpawn;
     }
 
     public void setHelmet(ItemStack helmet) {
@@ -247,6 +249,11 @@ public class BossEditor {
         return true;
     }
 
+    public void setMount(MountType mountType, double mountHealth) {
+        this.mountType = mountType;
+        this.mountHealth = mountHealth;
+    }
+
     public int nearEntitySize() {
         return this.nearAttackEntities.size();
     }
@@ -272,7 +279,14 @@ public class BossEditor {
 
         finish = true;
 
-        return new Boss(settings, livingId, name, spawnLocation, type);
+        Boss boss = new Boss(settings, livingId, name, spawnLocation, type);
+
+        if(mountType != null) {
+            Mount mount = new Mount(mountType, mountHealth);
+            boss.setMount(mount);
+        }
+
+        return boss;
     }
 
 }
