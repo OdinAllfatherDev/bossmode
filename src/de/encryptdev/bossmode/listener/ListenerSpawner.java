@@ -24,8 +24,7 @@ public class ListenerSpawner implements Listener {
             if(event.getSpawner().getMetadata("boss_id").get(0).value() instanceof IBoss) {
                 event.getEntity().remove();
                 IBoss iBoss = (IBoss) event.getSpawner().getMetadata("boss_id").get(0).value();
-                IBoss copy = bossManager.copyBoss(iBoss);
-                copy.spawnBoss(event.getLocation());
+                bossManager.spawnBoss(iBoss, event.getLocation());
             }
 
         }

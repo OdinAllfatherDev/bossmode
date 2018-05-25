@@ -3,15 +3,19 @@ package de.encryptdev.bossmode.listener.inventory;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by EncryptDev
  */
-public class ListenerPutInventory extends InventoryListenerAdapter {
+public class ListenerPutInventory implements Listener {
 
     private BossManager bossManager;
     
@@ -19,9 +23,18 @@ public class ListenerPutInventory extends InventoryListenerAdapter {
         this.bossManager = bossManager;
     }
     
-    @Override
-    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    @EventHandler
+    public void on(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = event.getInventory();
+
+        if(CheckNull.checkNull(event))
+            return;
+
+        ItemStack itemStack = event.getCurrentItem();
+
         if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.ARMOR_HELMET.getInvName())) {
+            event.setCancelled(true);
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
                     if (!checkEmptyInventory(inventory)) {
@@ -34,6 +47,7 @@ public class ListenerPutInventory extends InventoryListenerAdapter {
 
                 }
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.ARMOR_CHESTPLATE.getInvName())) {
+            event.setCancelled(true);
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
                     if (!checkEmptyInventory(inventory)) {
@@ -48,6 +62,7 @@ public class ListenerPutInventory extends InventoryListenerAdapter {
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.ARMOR_LEGGINGS.getInvName())) {
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
+                    event.setCancelled(true);
                     if (!checkEmptyInventory(inventory)) {
                         ItemStack leggings = getSingleItem(inventory);
                         bossManager.getBossEditor(player).setLeggings(leggings);
@@ -58,6 +73,7 @@ public class ListenerPutInventory extends InventoryListenerAdapter {
 
                 }
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.ARMOR_BOOTS.getInvName())) {
+            event.setCancelled(true);
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
                     if (!checkEmptyInventory(inventory)) {
@@ -72,6 +88,7 @@ public class ListenerPutInventory extends InventoryListenerAdapter {
 
                 }
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.DROPS.getInvName())) {
+            event.setCancelled(true);
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
                     if (!checkEmptyInventory(inventory)) {
@@ -92,6 +109,7 @@ public class ListenerPutInventory extends InventoryListenerAdapter {
 
                 }
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.OFF_HAND.getInvName())) {
+            event.setCancelled(true);
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
                     if (!checkEmptyInventory(inventory)) {
@@ -105,6 +123,7 @@ public class ListenerPutInventory extends InventoryListenerAdapter {
 
                 }
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.MAIN_HAND.getInvName())) {
+            event.setCancelled(true);
             if (itemStack.getItemMeta().hasDisplayName())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
                     if (!checkEmptyInventory(inventory)) {
@@ -118,7 +137,6 @@ public class ListenerPutInventory extends InventoryListenerAdapter {
 
                 }
         }
-        return new AdapterCallback(inventory, true);
     }
 
     private boolean checkEmptyInventory(Inventory inventory) {

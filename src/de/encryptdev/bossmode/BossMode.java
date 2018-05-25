@@ -2,6 +2,7 @@ package de.encryptdev.bossmode;
 
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.boss.util.EntityTypeVersion;
 import de.encryptdev.bossmode.command.CommandBoss;
 import de.encryptdev.bossmode.listener.ListenerChat;
@@ -14,6 +15,9 @@ import de.encryptdev.bossmode.ref.Reflection;
 import de.encryptdev.bossmode.util.MessageSystem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.logging.Level;
@@ -132,8 +136,11 @@ public class BossMode extends JavaPlugin {
     @Override
     public void onDisable() {
         /*Remove all living bosses*/
-        for (IBoss boss : bossManager.getAllSpawnedBosses())
-            boss.death();
+        for(World worlds : Bukkit.getWorlds())
+            for(Entity entities : worlds.getEntities())
+                if(entities instanceof LivingEntity)
+                    if(BossUtil.isBoss((LivingEntity) entities))
+                        BossUtil.getLivingBossByMetadata((LivingEntity) entities).death();
 
         getConfig().set("livingBossId", 0);
         saveConfig();

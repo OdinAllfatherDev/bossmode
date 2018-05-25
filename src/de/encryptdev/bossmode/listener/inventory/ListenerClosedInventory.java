@@ -1,13 +1,12 @@
 package de.encryptdev.bossmode.listener.inventory;
 
 import de.encryptdev.bossmode.BossMode;
-import de.encryptdev.bossmode.InventoryStorage;
+import de.encryptdev.bossmode.boss.util.BossEditor;
 import de.encryptdev.bossmode.boss.util.BossManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.scheduler.BukkitRunnable;
 
 /**
@@ -25,81 +24,23 @@ public class ListenerClosedInventory implements Listener {
     public void on(InventoryCloseEvent event) {
         Player player = (Player) event.getPlayer();
 
-        Inventory inventory = event.getInventory();
-
-        if (inventory.getName().equalsIgnoreCase("§eBoss Settings") ||
-                inventory.getName().equalsIgnoreCase("§eBiome 1") ||
-                inventory.getName().equalsIgnoreCase("§eBiome 2") ||
-                inventory.getName().equalsIgnoreCase("§eBiome 3") ||
-                inventory.getName().equalsIgnoreCase("§5Special Attacks") ||
-                inventory.getName().equalsIgnoreCase("§ePotion Effects") ||
-                inventory.getName().equalsIgnoreCase("§eSettings | §eRegeneration") ||
-                inventory.getName().equalsIgnoreCase("§eSettings | §eSwiftness") ||
-                inventory.getName().equalsIgnoreCase("§eSettings | §eFire Resistance") ||
-                inventory.getName().equalsIgnoreCase("§eSettings | §eHealing") ||
-                inventory.getName().equalsIgnoreCase("§eSettings | §eStrength") ||
-                inventory.getName().equalsIgnoreCase("§eSettings | §eSlowness") ||
-                inventory.getName().equalsIgnoreCase("§eSettings | §eInvisibility") ||
-                inventory.getName().equalsIgnoreCase("§4Advanced Settings") ||
-                inventory.getName().equalsIgnoreCase("§4Entity Type #1") ||
-                inventory.getName().equalsIgnoreCase("§4Entity Type #2") ||
-                inventory.getName().equalsIgnoreCase("§bEquipment") ||
-                inventory.getName().equalsIgnoreCase("§eMountTypes")) {
-
-            checkQuit(player);
-
-        } else if (inventory.getName().equalsIgnoreCase("§eSet the entity type")) {
+        if (bossManager.getBossEditor(player) != null) {
             new BukkitRunnable() {
 
                 @Override
                 public void run() {
-                    if (player.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting")) {
-                        bossManager.getEditors().remove(player);
-                        bossManager.getPlayerBossEditor().remove(player);
-                        player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
-                    }
-
-                }
-            }.runTaskLater(BossMode.getInstance(), 5);
-        } else if (inventory.getName().equalsIgnoreCase("§eSpawner Settings")) {
-            new BukkitRunnable() {
-
-                @Override
-                public void run() {
-                    if (player.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting") &&
-                            !bossManager.getChatCommand().containsKey(player)) {
-                        bossManager.getPlayerSpawnerEditor().remove(player);
-                        bossManager.getEditors().remove(player);
-                        player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
+                    BossEditor editor = bossManager.getBossEditor(player);
+                    if (!editor.isFinish() && !bossManager.getChatCommand().containsKey(player)) {
+                        if (player.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting")) {
+                            bossManager.getPlayerBossEditor().remove(player);
+                            bossManager.getEditors().remove(player);
+                            bossManager.getEditBoss().remove(player);
+                            player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
+                        }
                     }
                 }
-            }.runTaskLater(BossMode.getInstance(), 5);
+            }.runTaskLater(BossMode.getInstance(), 10);
         }
-        for (InventoryStorage.CounterType counterType : InventoryStorage.CounterType.values())
-            if (event.getInventory().getName().equalsIgnoreCase(counterType.getInventoryName())) {
-                checkQuit(player);
-            }
 
-    }
-
-    private void checkQuit(Player player) {
-        new BukkitRunnable() {
-
-            @Override
-            public void run() {
-                if (!bossManager.getChatCommand().containsKey(player)
-                        && !bossManager.getBossEditor(player).isFinish()
-                        && player.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting")) {
-                    bossManager.getEditors().remove(player);
-                    bossManager.getPlayerBossEditor().remove(player);
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
-                } else if (!bossManager.getChatCommand().containsKey(player)
-                        && bossManager.getBossEditor(player).isFinish()) {
-                    bossManager.getEditors().remove(player);
-                    bossManager.getPlayerBossEditor().remove(player);
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("finishEditorMode"));
-                }
-            }
-        }.runTaskLater(BossMode.getInstance(), 5);
     }
 }

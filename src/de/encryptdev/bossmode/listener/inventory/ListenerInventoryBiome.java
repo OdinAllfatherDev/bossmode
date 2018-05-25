@@ -14,59 +14,69 @@ import org.bukkit.inventory.ItemStack;
 /**
  * Created by EncryptDev
  */
-public class ListenerInventoryBiome extends InventoryListenerAdapter {
-    
+public class ListenerInventoryBiome implements Listener {
+
     private BossManager bossManager;
-    
+
     public ListenerInventoryBiome(BossManager bossManager) {
         this.bossManager = bossManager;
     }
 
-    @Override
-    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
-        if(inventory.getName().equalsIgnoreCase("§eBiome 1")) {
+    @EventHandler
+    public void on(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = event.getInventory();
+
+        if (CheckNull.checkNull(event))
+            return;
+
+        ItemStack itemStack = event.getCurrentItem();
+        if (inventory.getName().equalsIgnoreCase("§eBiome 1")) {
+            event.setCancelled(true);
             String itemName = itemStack.getItemMeta().getDisplayName();
-            if(itemName.equalsIgnoreCase("§eNext")) {
+            if (itemName.equalsIgnoreCase("§eNext")) {
                 player.openInventory(BossMode.getInstance().getInventoryStorage().getBiomeInventory(2));
-            } else if(itemName.equalsIgnoreCase("§eBack")) {
+            } else if (itemName.equalsIgnoreCase("§eBack")) {
                 player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(true));
             }
 
-            if(itemName.contains("§a§l")) {
+            if (itemName.contains("§a§l")) {
                 Biome biome = Biome.valueOf(itemName.replace("§a§l", ""));
                 bossManager.getBossEditor(player).setBiome(biome);
                 player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(true));
             }
 
 
-        } else if(inventory.getName().equalsIgnoreCase("§eBiome 2")) {
+        } else if (inventory.getName().equalsIgnoreCase("§eBiome 2")) {
+            event.setCancelled(true);
             String itemName = itemStack.getItemMeta().getDisplayName();
 
-            if(itemName.equalsIgnoreCase("§eNext")) {
+            if (itemName.equalsIgnoreCase("§eNext")) {
                 player.openInventory(BossMode.getInstance().getInventoryStorage().getBiomeInventory(3));
-            } else if(itemName.equalsIgnoreCase("§eBack")) {
+            } else if (itemName.equalsIgnoreCase("§eBack")) {
                 player.openInventory(BossMode.getInstance().getInventoryStorage().getBiomeInventory(1));
             }
 
-            if(itemName.contains("§a§l")) {
+            if (itemName.contains("§a§l")) {
                 Biome biome = Biome.valueOf(itemName.replace("§a§l", ""));
                 bossManager.getBossEditor(player).setBiome(biome);
                 player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(true));
             }
 
-        } else if(inventory.getName().equalsIgnoreCase("§eBiome 3")) {
+        } else if (inventory.getName().equalsIgnoreCase("§eBiome 3")) {
+            event.setCancelled(true);
             String itemName = itemStack.getItemMeta().getDisplayName();
 
-            if(itemName.equalsIgnoreCase("§eBack")) {
+            if (itemName.equalsIgnoreCase("§eBack")) {
                 player.openInventory(BossMode.getInstance().getInventoryStorage().getBiomeInventory(2));
             }
 
-            if(itemName.contains("§a§l")) {
+            if (itemName.contains("§a§l")) {
                 Biome biome = Biome.valueOf(itemName.replace("§a§l", ""));
                 bossManager.getBossEditor(player).setBiome(biome);
                 player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(true));
             }
         }
-        return new AdapterCallback(inventory, true);
     }
+
 }

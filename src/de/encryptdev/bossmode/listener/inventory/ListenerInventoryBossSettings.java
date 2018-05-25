@@ -4,9 +4,13 @@ import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.util.CheckNull;
 import de.encryptdev.bossmode.util.ItemCreator;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -17,17 +21,26 @@ import java.util.List;
 /**
  * Created by EncryptDev
  */
-public class ListenerInventoryBossSettings extends InventoryListenerAdapter {
-    
+public class ListenerInventoryBossSettings implements Listener {
+
     private BossManager bossManager;
-    
+
     public ListenerInventoryBossSettings(BossManager bossManager) {
         this.bossManager = bossManager;
     }
 
-    @Override
-    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    @EventHandler
+    public void on(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = event.getInventory();
+
+        if(CheckNull.checkNull(event))
+            return;
+
+        ItemStack itemStack = event.getCurrentItem();
+
         if (inventory.getName().equalsIgnoreCase("§eBoss Settings")) {
+            event.setCancelled(true);
             String itemName = itemStack.getItemMeta().getDisplayName();
 
             switch (itemName) {
@@ -124,12 +137,11 @@ public class ListenerInventoryBossSettings extends InventoryListenerAdapter {
                         bossManager.getBossEditor(player).setBiome(null);
                     }
 
-                    inventory.setItem(slot, newItem);
+                    inventory.setItem(event.getSlot(), newItem);
                     break;
 
             }
 
         }
-        return new AdapterCallback(inventory, true);
     }
 }

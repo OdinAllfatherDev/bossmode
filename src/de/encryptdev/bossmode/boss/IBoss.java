@@ -19,8 +19,6 @@ public interface IBoss {
 
     void spawnBoss(Location location);
 
-
-
     String getBossName();
 
     int getBossID();

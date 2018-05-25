@@ -2,21 +2,24 @@ package de.encryptdev.bossmode.listener.inventory;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
-import de.encryptdev.bossmode.boss.mount.Mount;
 import de.encryptdev.bossmode.boss.mount.MountType;
 import de.encryptdev.bossmode.boss.special.ArmySpecialAttack;
 import de.encryptdev.bossmode.boss.special.StompSpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.util.CheckNull;
 import de.encryptdev.bossmode.util.ItemCreator;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by EncryptDev
  */
-public class ListenerInventoryCounterType extends InventoryListenerAdapter {
+public class ListenerInventoryCounterType implements Listener {
 
     private BossManager bossManager;
 
@@ -24,11 +27,19 @@ public class ListenerInventoryCounterType extends InventoryListenerAdapter {
         this.bossManager = bossManager;
     }
 
-    @Override
-    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    @EventHandler
+    public void on(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = event.getInventory();
+
+        if (CheckNull.checkNull(event))
+            return;
+
+        ItemStack itemStack = event.getCurrentItem();
 
         for (InventoryStorage.CounterType counterType : InventoryStorage.CounterType.values()) {
             if (inventory.getName().equalsIgnoreCase(counterType.getInventoryName())) {
+                event.setCancelled(true);
                 String itemName = itemStack.getItemMeta().getDisplayName();
 
                 double amount = Double.parseDouble(inventory.getItem(13).getItemMeta().getDisplayName().split(":")[1].replace("§a§l", "").trim());
@@ -167,7 +178,6 @@ public class ListenerInventoryCounterType extends InventoryListenerAdapter {
             }
         }
 
-        return new AdapterCallback(inventory, true);
     }
 
     private void changeMiddleItem(Inventory inventory, InventoryStorage.CounterType counterType, double amount) {

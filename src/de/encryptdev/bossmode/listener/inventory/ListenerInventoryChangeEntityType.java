@@ -2,25 +2,38 @@ package de.encryptdev.bossmode.listener.inventory;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by EncryptDev
  */
-public class ListenerInventoryChangeEntityType extends InventoryListenerAdapter {
-    
+public class ListenerInventoryChangeEntityType implements Listener {
+
     private BossManager bossManager;
-    
+
     public ListenerInventoryChangeEntityType(BossManager bossManager) {
         this.bossManager = bossManager;
     }
-    
-    @Override
-    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+
+    @EventHandler
+    public void on(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = event.getInventory();
+
+        if (CheckNull.checkNull(event))
+            return;
+
+        ItemStack itemStack = event.getCurrentItem();
+
         if (inventory.getName().equalsIgnoreCase("§eSet the entity type")) {
+            event.setCancelled(true);
             String itemName = itemStack.getItemMeta().getDisplayName();
             String normalName = itemName.substring(4, itemName.length());
 
@@ -63,6 +76,5 @@ public class ListenerInventoryChangeEntityType extends InventoryListenerAdapter 
             }
 
         }
-        return new AdapterCallback(inventory, true);
     }
 }

@@ -4,14 +4,18 @@ import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.special.TeleportSpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 /**
  * Created by EncryptDev
  */
-public class ListenerInventorySpecialAttack extends InventoryListenerAdapter {
+public class ListenerInventorySpecialAttack implements Listener {
 
     private BossManager bossManager;
 
@@ -19,9 +23,18 @@ public class ListenerInventorySpecialAttack extends InventoryListenerAdapter {
         this.bossManager = bossManager;
     }
 
-    @Override
-    public AdapterCallback listener(Player player, Inventory inventory, ItemStack itemStack, int slot) {
+    @EventHandler
+    public void on(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = event.getInventory();
+
+        if (CheckNull.checkNull(event))
+            return;
+
+        ItemStack itemStack = event.getCurrentItem();
+
         if (inventory.getName().equalsIgnoreCase("§5Special Attacks")) {
+            event.setCancelled(true);
             String itemName = itemStack.getItemMeta().getDisplayName();
 
             switch (itemName) {
@@ -44,7 +57,6 @@ public class ListenerInventorySpecialAttack extends InventoryListenerAdapter {
                     break;
             }
         }
-        return new AdapterCallback(inventory, true);
     }
 
 }
