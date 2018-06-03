@@ -60,6 +60,30 @@ public class SpawnerEditor {
         this.spawnRange = spawnRange;
     }
 
+    public int getDelay() {
+        return delay;
+    }
+
+    public int getMaxSpawnDelay() {
+        return maxSpawnDelay;
+    }
+
+    public int getMinSpawnDelay() {
+        return minSpawnDelay;
+    }
+
+    public int getRequiredPlayerRange() {
+        return requiredPlayerRange;
+    }
+
+    public int getSpawnCount() {
+        return spawnCount;
+    }
+
+    public int getSpawnRange() {
+        return spawnRange;
+    }
+
     public ItemStack build() {
         ItemStack itemStack = new ItemStack(Material.MOB_SPAWNER);
         ItemMeta meta = itemStack.getItemMeta();

@@ -1,6 +1,7 @@
 package de.encryptdev.bossmode.boss.util;
 
 import de.encryptdev.bossmode.BossMode;
+import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.ref.Reflection;
 import org.bukkit.Chunk;
@@ -11,6 +12,7 @@ import org.bukkit.entity.LivingEntity;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * This Util class is only for the boss
@@ -38,6 +40,10 @@ public class BossUtil {
             }
         }
         return null;
+    }
+
+    public static boolean checkDefaultValue(InventoryStorage.CounterType counterType, double value) {
+        return counterType.getDefaultValue() == value;
     }
 
     public static String makeEnumNameNormal(Enum e) {
@@ -123,6 +129,15 @@ public class BossUtil {
             }
         }
         return locations;
+    }
+
+    public static String wrappBossSettings(IBoss iBoss) {
+        BossSettings settings = iBoss.getBossSettings();
+        String wrapped = "";
+        for (Map.Entry<String, Object> str : settings.entrySet()) {
+            wrapped = wrapped + str.getKey() + ":" + str.getValue() + "~";
+        }
+        return wrapped.substring(0, wrapped.length() - 1);
     }
 
 }

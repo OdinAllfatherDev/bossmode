@@ -2,7 +2,6 @@ package de.encryptdev.bossmode.boss.util;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
-import de.encryptdev.bossmode.ref.Reflection;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
@@ -14,13 +13,12 @@ import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by EncryptDev
  */
-public class BossSettings {
+public class BossSettings extends HashMap<String, Object> {
 
     public static final String META_DATA_BOSS_ID = "bm_boss_id";
     public static final String META_DATA_BOSS_LIVING_ID = "bm_boss_living_id";
@@ -77,6 +75,98 @@ public class BossSettings {
         this.nearAttackEntities = nearAttackEntities;
         this.lookAtPlayer = lookAtPlayer;
         this.is1_8 = BossUtil.is1_8();
+    }
+
+    @Override
+    public Set<Entry<String, Object>> entrySet() {
+        Set<Entry<String, Object>> set = new HashSet<>();
+        set.add(new SimpleEntry<>("maxHealth", maxHealth));
+
+        if (equipment != null) {
+            if (equipment.getHelmet() != null)
+                set.add(new SimpleEntry<>("equipment_helmet", equipment.getHelmet().getType().toString()));
+            else
+                set.add(new SimpleEntry<>("equipment_helmet", "null"));
+            if (equipment.getChestplate() != null)
+                set.add(new SimpleEntry<>("equipment_chestplate", equipment.getChestplate().getType().toString()));
+            else
+                set.add(new SimpleEntry<>("equipment_chestplate", "null"));
+            if (equipment.getLeggings() != null)
+                set.add(new SimpleEntry<>("equipment_leggings", equipment.getLeggings().getType().toString()));
+            else
+                set.add(new SimpleEntry<>("equipment_leggings", "null"));
+            if (equipment.getBoots() != null)
+                set.add(new SimpleEntry<>("equipment_boots", equipment.getBoots().getType().toString()));
+            else
+                set.add(new SimpleEntry<>("equipment_boots", "null"));
+            if (equipment.getMainHand() != null)
+                set.add(new SimpleEntry<>("equipment_mainhand", equipment.getMainHand().getType().toString()));
+            else
+                set.add(new SimpleEntry<>("equipment_mainhand", "null"));
+            if (equipment.getOffHand() != null)
+                set.add(new SimpleEntry<>("equipment_offhand", equipment.getOffHand().getType().toString()));
+            else
+                set.add(new SimpleEntry<>("equipment_offhand", "null"));
+        } else {
+            set.add(new SimpleEntry<>("equipment_helmet", "null"));
+            set.add(new SimpleEntry<>("equipment_chestplate", "null"));
+            set.add(new SimpleEntry<>("equipment_leggings", "null"));
+            set.add(new SimpleEntry<>("equipment_boots", "null"));
+            set.add(new SimpleEntry<>("equipment_mainhand", "null"));
+            set.add(new SimpleEntry<>("equipment_offhand", "null"));
+        }
+
+        set.add(new SimpleEntry<>("dropChanceMainHand", dropChanceWeaponMainHand));
+        set.add(new SimpleEntry<>("dropChanceOffHand", dropChanceWeaponSecondHand));
+        String naturalDropsStr = "";
+        if (!naturalDrops.isEmpty()) {
+            for (ItemStack item : naturalDrops) {
+                naturalDropsStr = naturalDropsStr + item.getType().toString() + ";";
+            }
+            naturalDropsStr = naturalDropsStr.substring(0, naturalDropsStr.length() - 1);
+        }
+
+        set.add(new SimpleEntry<>("naturalDrop", naturalDropsStr));
+        set.add(new SimpleEntry<>("damage", damage));
+        set.add(new SimpleEntry<>("chanceToSpawn", chanceToSpawn));
+        set.add(new SimpleEntry<>("speed", speed));
+        set.add(new SimpleEntry<>("spawnAmount", spawnAmount));
+        set.add(new SimpleEntry<>("droppedXP", dropChanceWeaponSecondHand));
+        set.add(new SimpleEntry<>("spawnRadius", spawnRadius));
+        set.add(new SimpleEntry<>("biome", biome != null ? biome.toString() : "null"));
+        set.add(new SimpleEntry<>("nearbyRad", nearbyRad));
+        String potionEffectsStr = "";
+        if (!potionEffects.isEmpty()) {
+            for (PotionEffect pe : potionEffects) {
+                potionEffectsStr = potionEffectsStr + pe.getType().toString() + "%" + pe.getAmplifier() + "%" + pe.getDuration() + ";";
+            }
+            potionEffectsStr = potionEffectsStr.substring(0, potionEffectsStr.length() - 1);
+        }
+        set.add(new SimpleEntry<>("potionEffects", potionEffectsStr));
+        String specialAttacksStr = "";
+        if (!specialAttacks.isEmpty()) {
+            for (SpecialAttack sa : specialAttacks) {
+                String wrappedData = "";
+                for (String data : sa.datas()) {
+                    wrappedData = wrappedData + data + "#";
+                }
+                wrappedData = wrappedData.substring(0, wrappedData.length() - 1);
+                specialAttacksStr = specialAttacksStr + sa.getName() + "%" + wrappedData + ";";
+            }
+            specialAttacksStr = specialAttacksStr.substring(0, specialAttacksStr.length() - 1);
+        }
+        set.add(new SimpleEntry<>("specialAttacks", specialAttacksStr));
+        String nearAttackEntitiesStr = "";
+        if (!nearAttackEntities.isEmpty()) {
+            for (String classes : nearAttackEntities) {
+                nearAttackEntitiesStr = nearAttackEntitiesStr + classes + ";";
+            }
+            nearAttackEntitiesStr = nearAttackEntitiesStr.substring(0, nearAttackEntitiesStr.length() - 1);
+        }
+
+        set.add(new SimpleEntry<>("nearAttackEntitiesStr", nearAttackEntitiesStr));
+        set.add(new SimpleEntry<>("lookAtPlayer", String.valueOf(lookAtPlayer)));
+        return set;
     }
 
     public LivingEntity createLivingEntity(EntityType type, Location location, int livingId) {
@@ -232,4 +322,5 @@ public class BossSettings {
     public boolean isNaturalSpawn() {
         return biome != null;
     }
+
 }

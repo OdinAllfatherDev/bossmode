@@ -28,7 +28,7 @@ public class CommandBoss extends ACommand {
 
         if (args.length == 0) {
             player.sendMessage("                           §4§lBOSSMODE       ");
-            player.sendMessage("                               §6§lv" + BossMode.getInstance().getDescription().getVersion() + "-BETA");
+            player.sendMessage("                            §6§lv" + BossMode.getInstance().getDescription().getVersion());
             player.sendMessage("                       §5§lby EncryptDev   ");
             player.sendMessage(BossMode.PREFIX + "/boss - show all commands");
             player.sendMessage(BossMode.PREFIX + "/boss editor - change in the editor mode");
@@ -39,6 +39,7 @@ public class CommandBoss extends ACommand {
             player.sendMessage(BossMode.PREFIX + "/boss spawn <id> - spawn a specific boss");
             player.sendMessage(BossMode.PREFIX + "/boss spawner <id> - get a spawner from the boss, if the spawner exist");
             player.sendMessage(BossMode.PREFIX + "/boss delete <id> - delete the boss");
+            player.sendMessage(BossMode.PREFIX + "/bmstats - show your own stats");
             player.sendMessage(BossMode.PREFIX + "I hope you have fun! ;)");
         } else if (args.length == 1) {
             if (args[0].equalsIgnoreCase("editor")) {

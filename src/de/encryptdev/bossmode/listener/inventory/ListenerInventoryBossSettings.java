@@ -4,6 +4,7 @@ import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.util.CheckNull;
 import de.encryptdev.bossmode.util.ItemCreator;
 import org.bukkit.Material;
@@ -43,12 +44,17 @@ public class ListenerInventoryBossSettings implements Listener {
             event.setCancelled(true);
             String itemName = itemStack.getItemMeta().getDisplayName();
 
+
             switch (itemName) {
                 case "§2Health":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.HEALTH));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.HEALTH,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.HEALTH, bossManager.getBossEditor(player).getMaxHealth()) ? InventoryStorage.CounterType.HEALTH.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getMaxHealth()));
                     break;
                 case "§4Damage":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.DAMAGE));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.DAMAGE,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.DAMAGE, bossManager.getBossEditor(player).getDamage()) ? InventoryStorage.CounterType.DAMAGE.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getDamage()));
                     break;
                 case "§bEquipment":
                     player.openInventory(BossMode.getInstance().getInventoryStorage().equipment());
@@ -63,7 +69,9 @@ public class ListenerInventoryBossSettings implements Listener {
                     player.openInventory(BossMode.getInstance().getInventoryStorage().advancedSettings(bossManager.getBossEditor(player)));
                     break;
                 case "§eWalk Speed":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPEED));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPEED,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPEED, bossManager.getBossEditor(player).getSpeed()) ? InventoryStorage.CounterType.SPEED.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getSpeed()));
                     break;
                 case "§eFinish":
                     IBoss boss = bossManager.getBossEditor(player).build();
@@ -71,6 +79,11 @@ public class ListenerInventoryBossSettings implements Listener {
                             bossManager.getEditBoss().contains(player));
                     player.sendMessage(BossMode.getInstance().getTranslatedMessage("createBoss"));
                     bossManager.getBossEditor(player).setFinish(true);
+                    bossManager.getPlayerBossEditor().remove(player);
+                    bossManager.getEditors().remove(player);
+                    bossManager.getPlayerSpawnerEditor().remove(player);
+                    bossManager.getEditBoss().remove(player);
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
                     player.closeInventory();
                     new BukkitRunnable() {
 
@@ -81,13 +94,17 @@ public class ListenerInventoryBossSettings implements Listener {
                     }.runTaskLater(BossMode.getInstance(), 40);
                     break;
                 case "§eNearby Radius":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.NEARBY_RADIUS));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.NEARBY_RADIUS,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.NEARBY_RADIUS, bossManager.getBossEditor(player).getNearbyRad()) ? InventoryStorage.CounterType.NEARBY_RADIUS.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getNearbyRad()));
                     break;
                 case "§eMount":
                     player.openInventory(BossMode.getInstance().getInventoryStorage().mountTypes());
                     break;
                 case "§eSpawn Radius":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWN_RADIUS));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWN_RADIUS,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPAWN_RADIUS, bossManager.getBossEditor(player).getSpawnRadius()) ? InventoryStorage.CounterType.SPAWN_RADIUS.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getSpawnRadius()));
                     break;
                 case "§ePotion Effects":
                     player.openInventory(BossMode.getInstance().getInventoryStorage().potionEffects());
@@ -107,13 +124,19 @@ public class ListenerInventoryBossSettings implements Listener {
                     bossManager.getChatCommand().put(player, BossManager.CHAT_COMMAND_SPAWN_LOCATION);
                     break;
                 case "§aChance to spawn":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.CHANCE_TO_SPAWN));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.CHANCE_TO_SPAWN,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.CHANCE_TO_SPAWN, bossManager.getBossEditor(player).getChanceToSpawn()) ? InventoryStorage.CounterType.CHANCE_TO_SPAWN.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getChanceToSpawn()));
                     break;
                 case "§eSpawn Amount":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWN_AMOUNT));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWN_AMOUNT,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPAWN_AMOUNT, bossManager.getBossEditor(player).getSpawnAmount()) ? InventoryStorage.CounterType.SPAWN_AMOUNT.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getSpawnAmount()));
                     break;
                 case "§aEXP":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.DROPPED_XP));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.DROPPED_XP,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.DROPPED_XP, bossManager.getBossEditor(player).getDroppedXp()) ? InventoryStorage.CounterType.DROPPED_XP.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getDroppedXp()));
                     break;
                 case "§2Natural Spawn":
                     List<String> lore = itemStack.getItemMeta().getLore();

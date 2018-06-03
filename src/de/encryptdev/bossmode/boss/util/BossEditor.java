@@ -80,9 +80,9 @@ public class BossEditor {
         this.spawnLocation = spawnLocation;
         this.biome = biome;
         this.specialAttacks = specialAttacks;
-        if(!specialAttacks.isEmpty()) {
-            for(SpecialAttack sa : specialAttacks)
-                if(sa.getClass().equals(ArmySpecialAttack.class))
+        if (!specialAttacks.isEmpty()) {
+            for (SpecialAttack sa : specialAttacks)
+                if (sa.getClass().equals(ArmySpecialAttack.class))
                     this.amountArmy = ((ArmySpecialAttack) sa).getAmount();
         }
         this.finish = false;
@@ -111,6 +111,10 @@ public class BossEditor {
                 1, 1, 20, null,
                 0, 100, 5, 1, new LinkedList<>(), null, new LinkedList<>(),
                 new LinkedList<>(), true);
+    }
+
+    public List<SpecialAttack> getSpecialAttacks() {
+        return specialAttacks;
     }
 
     public boolean isLookAtPlayer() {
@@ -258,6 +262,50 @@ public class BossEditor {
         return this.nearAttackEntities.size();
     }
 
+    public double getMaxHealth() {
+        return maxHealth;
+    }
+
+    public double getDamage() {
+        return damage;
+    }
+
+    public float getDropChanceMainHand() {
+        return dropChanceMainHand;
+    }
+
+    public float getDropChanceOffHand() {
+        return dropChanceOffHand;
+    }
+
+    public float getChanceToSpawn() {
+        return chanceToSpawn;
+    }
+
+    public double getSpeed() {
+        return speed;
+    }
+
+    public double getNearbyRad() {
+        return nearbyRad;
+    }
+
+    public double getSpawnRadius() {
+        return spawnRadius;
+    }
+
+    public int getSpawnAmount() {
+        return spawnAmount;
+    }
+
+    public int getDroppedXp() {
+        return droppedXp;
+    }
+
+    public double getMountHealth() {
+        return mountHealth;
+    }
+
     public IBoss build() {
 
         BossSettings settings = new BossSettings(id, maxHealth,
@@ -269,19 +317,19 @@ public class BossEditor {
         if (iBoss != null) {
             iBoss.setName(name);
             iBoss.setBossSettings(settings);
+            iBoss.setSpawnLocation(spawnLocation);
             return iBoss;
         }
 
         int livingId = BossUtil.getLivingBossIds() + 1;
 
-        BossMode.getInstance().getConfig().set("livingBossId", livingId);
-        BossMode.getInstance().saveConfig();
+        BossMode.getInstance().getBossIdFile().set("livingBossId", livingId);
 
         finish = true;
 
         Boss boss = new Boss(settings, livingId, name, spawnLocation, type);
 
-        if(mountType != null) {
+        if (mountType != null) {
             Mount mount = new Mount(mountType, mountHealth);
             boss.setMount(mount);
         }

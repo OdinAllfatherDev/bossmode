@@ -3,6 +3,7 @@ package de.encryptdev.bossmode.listener.inventory;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -38,28 +39,41 @@ public class ListenerInventorySpawnerSettings implements Listener {
 
             switch (itemName) {
                 case "§eDelay":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_DELAY));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_DELAY,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPAWNER_DELAY, bossManager.getSpawnerEditor(player).getDelay()) ? InventoryStorage.CounterType.SPAWNER_DELAY.getDefaultValue() :
+                                    bossManager.getSpawnerEditor(player).getDelay()));
                     break;
                 case "§eMin Spawn Delay":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_MIN_DELAY));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_MIN_DELAY,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPAWNER_MIN_DELAY, bossManager.getSpawnerEditor(player).getMinSpawnDelay()) ? InventoryStorage.CounterType.SPAWNER_MIN_DELAY.getDefaultValue() :
+                                    bossManager.getSpawnerEditor(player).getMinSpawnDelay()));
                     break;
                 case "§eMax Spawn Delay":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_MAX_DELAY));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_MAX_DELAY,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPAWNER_MAX_DELAY, bossManager.getSpawnerEditor(player).getMaxSpawnDelay()) ? InventoryStorage.CounterType.SPAWNER_MAX_DELAY.getDefaultValue() :
+                                    bossManager.getSpawnerEditor(player).getMaxSpawnDelay()));
                     break;
                 case "§eRequired Player Range":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_REQUIRED_PLAYERS_RANGE));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_REQUIRED_PLAYERS_RANGE,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPAWNER_REQUIRED_PLAYERS_RANGE, bossManager.getSpawnerEditor(player).getRequiredPlayerRange()) ? InventoryStorage.CounterType.SPAWNER_REQUIRED_PLAYERS_RANGE.getDefaultValue() :
+                                    bossManager.getSpawnerEditor(player).getRequiredPlayerRange()));
                     break;
                 case "§eSpawn Count":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_SPAWN_COUNT));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_SPAWN_COUNT,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPAWNER_SPAWN_COUNT, bossManager.getSpawnerEditor(player).getSpawnCount()) ? InventoryStorage.CounterType.SPAWNER_SPAWN_COUNT.getDefaultValue() :
+                                    bossManager.getSpawnerEditor(player).getSpawnCount()));
                     break;
                 case "§eSpawn Range":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_SPAWN_RANGE));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPAWNER_SPAWN_RANGE,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPAWNER_SPAWN_RANGE, bossManager.getSpawnerEditor(player).getSpawnRange()) ? InventoryStorage.CounterType.SPAWNER_SPAWN_RANGE.getDefaultValue() :
+                                    bossManager.getSpawnerEditor(player).getSpawnRange()));
                     break;
                 case "§eFinish":
                     ItemStack itemStack0 = bossManager.createSpawner(bossManager.getSpawnerEditor(player));
                     player.getInventory().addItem(itemStack0);
                     player.sendMessage(BossMode.getInstance().getTranslatedMessage("buildSpawner"));
                     bossManager.getPlayerSpawnerEditor().remove(player);
+                    bossManager.getEditors().remove(player);
                     player.closeInventory();
                     break;
             }

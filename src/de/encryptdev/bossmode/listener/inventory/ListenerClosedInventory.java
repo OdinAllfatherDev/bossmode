@@ -40,6 +40,33 @@ public class ListenerClosedInventory implements Listener {
                     }
                 }
             }.runTaskLater(BossMode.getInstance(), 10);
+        } else if (bossManager.getPlayerSpawnerEditor().get(player) != null) {
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    if (!bossManager.getChatCommand().containsKey(player)) {
+                        if (player.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting")) {
+                            bossManager.getPlayerSpawnerEditor().remove(player);
+                            bossManager.getEditors().remove(player);
+                            player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
+                        }
+                    }
+                }
+            }.runTaskLater(BossMode.getInstance(), 10);
+        }
+        if (event.getInventory().getName().equalsIgnoreCase("§eSet the entity type")) {
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    if (player.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting")) {
+                        bossManager.getEditors().remove(player);
+                        player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
+                    }
+                }
+            }.runTaskLater(BossMode.getInstance(), 10);
+            return;
         }
 
     }

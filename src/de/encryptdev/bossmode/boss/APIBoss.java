@@ -8,8 +8,9 @@ import de.encryptdev.bossmode.boss.event.BossSpawnEvent;
 import de.encryptdev.bossmode.boss.mount.Mount;
 import de.encryptdev.bossmode.boss.path.BossPathfinderEdited;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
+import de.encryptdev.bossmode.boss.util.BossManager;
 import de.encryptdev.bossmode.boss.util.BossSettings;
-import de.encryptdev.bossmode.ref.Reflection;
+import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.util.BossBarV1_8;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -26,20 +27,17 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.util.HashMap;
+import javax.annotation.Nullable;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.logging.Level;
 
 /**
  * Created by EncryptDev
  */
 public abstract class APIBoss implements IBoss {
-
-    private static final Map<IBoss, BukkitTask> task = new HashMap<>();
-    private static final Map<IBoss, BukkitTask> task0 = new HashMap<>();
 
     private String worldName;
     private int livingId;
@@ -53,7 +51,6 @@ public abstract class APIBoss implements IBoss {
     private BossAISpecialAttack specialAttack;
     private List<SpecialAttack> specialAttacks;
     private boolean hasSpawner;
-    private boolean is1_8;
     private BossBarV1_8 bossBar1_8;
     private List<Player> nearbyPlayers;
     private Mount mount;
@@ -62,9 +59,7 @@ public abstract class APIBoss implements IBoss {
         this.bossSettings = bossSettings;
         this.livingId = livingId;
         this.name = name;
-        this.is1_8 = BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R1 || BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R2 ||
-                BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_8_R3;
-        this.bossBar1_8 = is1_8 ? new BossBarV1_8(BossMode.getInstance(), name) : null;
+        this.bossBar1_8 = BossUtil.is1_8() ? new BossBarV1_8(BossMode.getInstance(), name) : null;
         this.spawnLocation = spawnLocation;
         this.type = type;
         this.biome = bossSettings.getBiome();
@@ -75,19 +70,23 @@ public abstract class APIBoss implements IBoss {
     }
 
     private void checkPlayers() {
-        task.put(this, Bukkit.getScheduler().runTaskTimerAsynchronously(BossMode.getInstance(), () -> {
-            for (Entity ent : livingBossEntity.getNearbyEntities(getBossSettings().getNearbyRad(), getBossSettings().getNearbyRad(), getBossSettings().getNearbyRad())) {
-                if (ent != null)
-                    if (ent instanceof Player) {
-                        if (nearbyPlayers.contains((Player) ent))
-                            continue;
-                        nearbyPlayers.add((Player) ent);
-                        if (is1_8)
-                            bossBar1_8.addPlayer((Player) ent);
-                        else
-                            bossBar.addPlayer((Player) ent);
-                    }
-            }
+        BossManager.TASK.put(this, Bukkit.getScheduler().runTaskTimerAsynchronously(BossMode.getInstance(), () -> {
+           try {
+               for (Entity ent : livingBossEntity.getNearbyEntities(getBossSettings().getNearbyRad(), getBossSettings().getNearbyRad(), getBossSettings().getNearbyRad())) {
+                   if (ent != null)
+                       if (ent instanceof Player) {
+                           if (nearbyPlayers.contains((Player) ent))
+                               continue;
+                           nearbyPlayers.add((Player) ent);
+                           if (BossUtil.is1_8())
+                               bossBar1_8.addPlayer((Player) ent);
+                           else
+                               bossBar.addPlayer((Player) ent);
+                       }
+               }
+           } catch(NoSuchElementException nsee) {
+               BossMode.getLog().log(Level.INFO, "[BossMode-LOG] Throw a NoSuchElementException. [Cached, no problem for the plugin :P]");
+           }
 
             List<Player> copy = nearbyPlayers;
 
@@ -95,7 +94,7 @@ public abstract class APIBoss implements IBoss {
                 for (Player player : copy) {
                     if ((player.getLocation().distanceSquared(livingBossEntity.getLocation()) > getBossSettings().getNearbyRad())) {
                         nearbyPlayers.remove(player);
-                        if (!is1_8)
+                        if (!BossUtil.is1_8())
                             bossBar.removePlayer(player);
                         else
                             bossBar1_8.removePlayer(player);
@@ -103,16 +102,21 @@ public abstract class APIBoss implements IBoss {
                 }
             }
 
-        }, 0, 20));
+        }, 20, 20));
     }
 
-    private void createBossBar(List<Player> players) {
-        if (is1_8) {
+    private void createBossBar(@Nullable List<Player> players) {
+        if (BossUtil.is1_8()) {
             players.forEach(player -> bossBar1_8.setProgress(300));
         } else {
             bossBar = Bukkit.createBossBar(name, BarColor.RED, BarStyle.SOLID, BarFlag.CREATE_FOG, BarFlag.DARKEN_SKY);
             bossBar.setProgress(1);
         }
+    }
+
+    @Override
+    public void setSpawnLocation(Location spawnLocation) {
+        this.spawnLocation = spawnLocation;
     }
 
     @Override
@@ -170,7 +174,7 @@ public abstract class APIBoss implements IBoss {
             @Override
             public void run() {
                 if (mount != null)
-                    mount.spawn(spawnLocation, livingBossEntity);
+                    mount.spawn(APIBoss.this, spawnLocation, livingBossEntity);
             }
         }.runTaskLater(BossMode.getInstance(), 10);
         this.checkPlayers();
@@ -208,7 +212,7 @@ public abstract class APIBoss implements IBoss {
     }
 
     private void executeSpecialAttack() {
-        task0.put(this, Bukkit.getScheduler().runTaskTimer(BossMode.getInstance(), () -> {
+        BossManager.TASK0.put(this, Bukkit.getScheduler().runTaskTimer(BossMode.getInstance(), () -> {
 
             if (!nearbyPlayers.isEmpty()) {
                 Player[] players = new Player[nearbyPlayers.size()];
@@ -254,7 +258,7 @@ public abstract class APIBoss implements IBoss {
 
         double progress1_8 = (livingBossEntity.getHealth() * 100) / livingBossEntity.getMaxHealth() * 3;
 
-        if (!is1_8)
+        if (!BossUtil.is1_8())
             if (progress <= 0)
                 this.bossBar.setProgress(0);
             else
@@ -263,7 +267,6 @@ public abstract class APIBoss implements IBoss {
             nearbyPlayers.forEach(player -> bossBar1_8.setProgress(progress1_8));
         else
             nearbyPlayers.forEach(player -> bossBar1_8.setProgress(progress1_8));
-
         Bukkit.getPluginManager().callEvent(new BossDamageEvent(this, damage, false));
     }
 
@@ -271,7 +274,7 @@ public abstract class APIBoss implements IBoss {
     public void death() {
         Bukkit.getPluginManager().callEvent(new BossDeathEvent(this, livingBossEntity != null ? livingBossEntity.getLocation() : null));
 
-        if (!is1_8) {
+        if (!BossUtil.is1_8()) {
             if (this.bossBar != null) {
                 for (Player pl : this.bossBar.getPlayers())
                     this.bossBar.removePlayer(pl);
@@ -288,13 +291,13 @@ public abstract class APIBoss implements IBoss {
             if (!this.bossSettings.getNaturalDrops().isEmpty())
                 for (ItemStack item : bossSettings.getNaturalDrops())
                     this.livingBossEntity.getWorld().dropItemNaturally(livingBossEntity.getLocation(), item);
-        if (task.containsKey(this)) {
-            task.get(this).cancel();
-            task.remove(this);
+        if (BossManager.TASK.containsKey(this)) {
+            BossManager.TASK.get(this).cancel();
+            BossManager.TASK.remove(this);
         }
-        if (task0.containsKey(this)) {
-            task0.get(this).cancel();
-            task0.remove(this);
+        if (BossManager.TASK0.containsKey(this)) {
+            BossManager.TASK0.get(this).cancel();
+            BossManager.TASK0.remove(this);
         }
         BossMode.getInstance().getBossManager().getAllSpawnedBosses().remove(this);
         if (this.livingBossEntity != null)
@@ -313,7 +316,7 @@ public abstract class APIBoss implements IBoss {
 
         double progress1_8 = (livingBossEntity.getHealth() * 100) / livingBossEntity.getMaxHealth() * 3;
 
-        if (!is1_8) {
+        if (!BossUtil.is1_8()) {
             if (progress >= 1)
                 this.bossBar.setProgress(1);
             else
@@ -354,6 +357,11 @@ public abstract class APIBoss implements IBoss {
     @Override
     public BossSettings getBossSettings() {
         return bossSettings;
+    }
+
+    @Override
+    public List<Player> getNearPlayers() {
+        return nearbyPlayers;
     }
 
     @Override

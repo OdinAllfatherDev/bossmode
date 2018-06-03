@@ -2,8 +2,11 @@ package de.encryptdev.bossmode.listener.inventory;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
+import de.encryptdev.bossmode.boss.special.SpecialAttack;
+import de.encryptdev.bossmode.boss.special.StompSpecialAttack;
 import de.encryptdev.bossmode.boss.special.TeleportSpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +14,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
 
 /**
  * Created by EncryptDev
@@ -50,10 +55,27 @@ public class ListenerInventorySpecialAttack implements Listener {
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
                     break;
                 case "§eStomp":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPECIAL_ATTACK_STOMP_STRENGTH));
+
+                    List<SpecialAttack> specialAttacks = bossManager.getBossEditor(player).getSpecialAttacks();
+                    StompSpecialAttack ssa = null;
+
+                    for(SpecialAttack sa : specialAttacks) {
+                        if(sa.getName().equals("stompSpecialAttack")) {
+                            ssa = (StompSpecialAttack) sa;
+                        }
+                    }
+
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPECIAL_ATTACK_STOMP_STRENGTH,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPECIAL_ATTACK_STOMP_STRENGTH, ssa == null ? InventoryStorage.CounterType.SPECIAL_ATTACK_STOMP_STRENGTH.getDefaultValue()
+                                    : ssa.getStrength())
+                                    ? InventoryStorage.CounterType.SPECIAL_ATTACK_STOMP_STRENGTH.getDefaultValue() :
+                                    ssa == null ? InventoryStorage.CounterType.SPECIAL_ATTACK_STOMP_STRENGTH.getDefaultValue()
+                                            : ssa.getStrength()));
                     break;
                 case "§eArmy":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPECIAL_ATTACK_ARMY_AMOUNT));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPECIAL_ATTACK_ARMY_AMOUNT,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPECIAL_ATTACK_ARMY_AMOUNT, bossManager.getBossEditor(player).getAmountArmy()) ? InventoryStorage.CounterType.SPECIAL_ATTACK_ARMY_AMOUNT.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getAmountArmy()));
                     break;
             }
         }

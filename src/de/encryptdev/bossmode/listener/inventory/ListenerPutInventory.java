@@ -3,6 +3,7 @@ package de.encryptdev.bossmode.listener.inventory;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -18,23 +19,22 @@ import org.bukkit.inventory.ItemStack;
 public class ListenerPutInventory implements Listener {
 
     private BossManager bossManager;
-    
+
     public ListenerPutInventory(BossManager bossManager) {
         this.bossManager = bossManager;
     }
-    
+
     @EventHandler
     public void on(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
         Inventory inventory = event.getInventory();
 
-        if(CheckNull.checkNull(event))
+        if (CheckNull.checkNull(event))
             return;
 
         ItemStack itemStack = event.getCurrentItem();
 
         if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.ARMOR_HELMET.getInvName())) {
-            event.setCancelled(true);
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
                     if (!checkEmptyInventory(inventory)) {
@@ -44,10 +44,9 @@ public class ListenerPutInventory implements Listener {
                         bossManager.getBossEditor(player).setHelmet(null);
                     }
                     player.openInventory(BossMode.getInstance().getInventoryStorage().equipment());
-
+                    event.setCancelled(true);
                 }
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.ARMOR_CHESTPLATE.getInvName())) {
-            event.setCancelled(true);
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
                     if (!checkEmptyInventory(inventory)) {
@@ -57,12 +56,11 @@ public class ListenerPutInventory implements Listener {
                         bossManager.getBossEditor(player).setChestplate(null);
                     }
                     player.openInventory(BossMode.getInstance().getInventoryStorage().equipment());
-
+                    event.setCancelled(true);
                 }
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.ARMOR_LEGGINGS.getInvName())) {
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
-                    event.setCancelled(true);
                     if (!checkEmptyInventory(inventory)) {
                         ItemStack leggings = getSingleItem(inventory);
                         bossManager.getBossEditor(player).setLeggings(leggings);
@@ -70,10 +68,10 @@ public class ListenerPutInventory implements Listener {
                         bossManager.getBossEditor(player).setLeggings(null);
                     }
                     player.openInventory(BossMode.getInstance().getInventoryStorage().equipment());
-
+                    event.setCancelled(true);
                 }
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.ARMOR_BOOTS.getInvName())) {
-            event.setCancelled(true);
+
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
                     if (!checkEmptyInventory(inventory)) {
@@ -82,19 +80,18 @@ public class ListenerPutInventory implements Listener {
                     } else {
                         bossManager.getBossEditor(player).setBoots(null);
                     }
-
                     player.openInventory(BossMode.getInstance().getInventoryStorage().equipment());
-
-
+                    event.setCancelled(true);
                 }
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.DROPS.getInvName())) {
-            event.setCancelled(true);
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
                     if (!checkEmptyInventory(inventory)) {
                         ItemStack[] items = inventory.getContents();
                         for (ItemStack item : items) {
                             if (item == null)
+                                continue;
+                            if (item.getType() == Material.STAINED_GLASS_PANE)
                                 continue;
                             if (item.hasItemMeta())
                                 if (item.getItemMeta().getDisplayName().equals("§6§lSet"))
@@ -106,21 +103,22 @@ public class ListenerPutInventory implements Listener {
                         bossManager.getBossEditor(player).setNaturalDrops(null);
                     }
                     player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));
-
+                    event.setCancelled(true);
                 }
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.OFF_HAND.getInvName())) {
-            event.setCancelled(true);
             if (itemStack.hasItemMeta())
                 if (itemStack.getItemMeta().getDisplayName().equalsIgnoreCase("§6§lSet")) {
                     if (!checkEmptyInventory(inventory)) {
                         ItemStack offHand = getSingleItem(inventory);
                         bossManager.getBossEditor(player).setOffHand(offHand);
                         player.closeInventory();
-                        player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.DROP_CHANCE_OFF_HAND));
+                        player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.DROP_CHANCE_OFF_HAND,
+                                BossUtil.checkDefaultValue(InventoryStorage.CounterType.DROP_CHANCE_OFF_HAND, bossManager.getBossEditor(player).getDropChanceOffHand()) ? InventoryStorage.CounterType.DROP_CHANCE_OFF_HAND.getDefaultValue() :
+                                        bossManager.getBossEditor(player).getDropChanceOffHand()));
                     } else {
                         bossManager.getBossEditor(player).setOffHand(null);
                     }
-
+                    event.setCancelled(true);
                 }
         } else if (inventory.getName().equalsIgnoreCase(InventoryStorage.PutType.MAIN_HAND.getInvName())) {
             event.setCancelled(true);
@@ -130,11 +128,13 @@ public class ListenerPutInventory implements Listener {
                         ItemStack mainHand = getSingleItem(inventory);
                         bossManager.getBossEditor(player).setMainHand(mainHand);
                         player.closeInventory();
-                        player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.DROP_CHANCE_MAIN_HAND));
+                        player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.DROP_CHANCE_MAIN_HAND,
+                                BossUtil.checkDefaultValue(InventoryStorage.CounterType.DROP_CHANCE_MAIN_HAND, bossManager.getBossEditor(player).getDropChanceMainHand()) ? InventoryStorage.CounterType.DROP_CHANCE_MAIN_HAND.getDefaultValue() :
+                                        bossManager.getBossEditor(player).getDropChanceMainHand()));
                     } else {
                         bossManager.getBossEditor(player).setMainHand(null);
                     }
-
+                    event.setCancelled(true);
                 }
         }
     }

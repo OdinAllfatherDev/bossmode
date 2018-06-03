@@ -12,6 +12,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.*;
 import java.util.logging.Level;
@@ -20,6 +21,9 @@ import java.util.logging.Level;
  * Created by EncryptDev
  */
 public class BossManager {
+
+    public static final Map<IBoss, BukkitTask> TASK = new HashMap<>();
+    public static final Map<IBoss, BukkitTask> TASK0 = new HashMap<>();
 
     public static final String CHAT_COMMAND_SPAWN_LOCATION = "cc_spawn_location";
     public static final String CHAT_COMMAND_EDIT_BOSS = "cc_edit_boss";
@@ -111,10 +115,9 @@ public class BossManager {
     public IBoss copyBoss(IBoss iBoss) {
         int livingId = BossUtil.getLivingBossIds() + 1;
 
-        BossMode.getInstance().getConfig().set("livingBossId", livingId);
-        BossMode.getInstance().saveConfig();
+        BossMode.getInstance().getBossIdFile().set("livingBossId", livingId);
 
-        Boss boss =  new Boss(iBoss.getBossSettings(), livingId, iBoss.getBossName(),
+        Boss boss = new Boss(iBoss.getBossSettings(), livingId, iBoss.getBossName(),
                 iBoss.getSpawnLocation(), iBoss.getEntityType());
         boss.setMount(iBoss.getMount());
 
@@ -177,7 +180,6 @@ public class BossManager {
 
         int spawned = 0;
 
-
         for (Chunk chunks : world.getLoadedChunks()) {
             if (chunks.getBlock(1, 1, 1).getBiome() == biome) {
                 if (rand < chanceToSpawn) {
@@ -188,8 +190,7 @@ public class BossManager {
                     Location spawnLocation = BossUtil.getChunkSurface(chunks)
                             .get(random.nextInt(BossUtil.getChunkSurface(chunks).size() - 1));
 
-                    IBoss toSpawn = BossMode.getInstance().getBossManager().copyBoss(iBoss);
-                    toSpawn.spawnBoss(spawnLocation);
+                    spawnBoss(iBoss, spawnLocation);
 
                 }
             }

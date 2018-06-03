@@ -3,6 +3,7 @@ package de.encryptdev.bossmode.listener.inventory;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -46,13 +47,19 @@ public class ListenerInventoryMountType implements Listener {
 
             switch (itemName) {
                 case "§aPig":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.MOUNT_HEALTH_PIG));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.MOUNT_HEALTH_PIG,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.MOUNT_HEALTH_PIG, bossManager.getBossEditor(player).getMountHealth()) ? InventoryStorage.CounterType.MOUNT_HEALTH_PIG.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getMountHealth()));
                     break;
                 case "§aCow":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.MOUNT_HEALTH_COW));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.MOUNT_HEALTH_COW,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.MOUNT_HEALTH_COW, bossManager.getBossEditor(player).getMountHealth()) ? InventoryStorage.CounterType.MOUNT_HEALTH_COW.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getMountHealth()));
                     break;
                 case "§aBat":
-                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.MOUNT_HEALTH_BAT));
+                    player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.MOUNT_HEALTH_BAT,
+                            BossUtil.checkDefaultValue(InventoryStorage.CounterType.MOUNT_HEALTH_BAT, bossManager.getBossEditor(player).getMountHealth()) ? InventoryStorage.CounterType.MOUNT_HEALTH_BAT.getDefaultValue() :
+                                    bossManager.getBossEditor(player).getMountHealth()));
                     break;
             }
         }

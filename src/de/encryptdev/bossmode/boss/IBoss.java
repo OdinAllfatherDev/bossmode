@@ -9,6 +9,7 @@ import org.bukkit.World;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 
@@ -55,7 +56,11 @@ public interface IBoss {
 
     void setMount(Mount mount);
 
+    void setSpawnLocation(Location spawnLocation);
+
     Mount getMount();
+
+    List<Player> getNearPlayers();
 
 
 }

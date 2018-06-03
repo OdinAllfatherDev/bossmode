@@ -6,6 +6,7 @@ import de.encryptdev.bossmode.boss.mount.MountType;
 import de.encryptdev.bossmode.boss.special.ArmySpecialAttack;
 import de.encryptdev.bossmode.boss.special.StompSpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.util.CheckNull;
 import de.encryptdev.bossmode.util.ItemCreator;
 import org.bukkit.Material;
@@ -145,7 +146,9 @@ public class ListenerInventoryCounterType implements Listener {
                                 break;
                             case SPECIAL_ATTACK_ARMY_AMOUNT:
                                 bossManager.getBossEditor(player).setAmountArmy((int) amount);
-                                player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPECIAL_ATTACK_ARMY_CHANCE));
+                                player.openInventory(BossMode.getInstance().getInventoryStorage().counterInventory(InventoryStorage.CounterType.SPECIAL_ATTACK_ARMY_CHANCE,
+                                        BossUtil.checkDefaultValue(InventoryStorage.CounterType.SPECIAL_ATTACK_ARMY_CHANCE, bossManager.getBossEditor(player).getAmountArmy()) ? InventoryStorage.CounterType.SPECIAL_ATTACK_ARMY_CHANCE.getDefaultValue() :
+                                                bossManager.getBossEditor(player).getAmountArmy()));
                                 break;
                             case SPECIAL_ATTACK_ARMY_CHANCE:
                                 bossManager.getBossEditor(player).addSpecialAttack(new ArmySpecialAttack(bossManager.getBossEditor(player).getAmountArmy(), amount));

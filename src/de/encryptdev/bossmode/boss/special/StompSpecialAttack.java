@@ -41,6 +41,10 @@ public class StompSpecialAttack extends SpecialAttack {
         return new String[]{String.valueOf(strength)};
     }
 
+    public double getStrength() {
+        return strength;
+    }
+
     @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();

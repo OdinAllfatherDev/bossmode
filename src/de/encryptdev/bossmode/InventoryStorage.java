@@ -113,10 +113,6 @@ public class InventoryStorage {
         ItemStack spawnLocation = ItemCreator.getItem(Material.BED, "§bSpawn Location", 1, (byte) 0,
                 Arrays.asList("§eSet the spawn location", "§eNOTE: If natural Spawn is on", "§ethen the spawn location is null"));
 
-        ItemStack spawnEntityBySpawnOtherEntity = ItemCreator.getItem(Material.GHAST_TEAR, "§bSpawn Chance - Random Spawn",
-                1, (byte) 0, Arrays.asList("§eWhen a entity spawn (natural), then is this the chance",
-                        "§ethat the spawned entity this boss", "§eNOTE:", "§eMin: 1", "§eMax: 100", "§eIf 0, than it's off"));
-
         ItemStack potionEffects = ItemCreator.getItem(Material.GLASS_BOTTLE, "§ePotion Effects", 1, (byte) 0,
                 Arrays.asList("§eAdd potion effects"));
 
@@ -162,7 +158,6 @@ public class InventoryStorage {
         inventory.setItem(37, exp);
 
         inventory.setItem(22, nearbyRad);
-        inventory.setItem(31, spawnEntityBySpawnOtherEntity);
         inventory.setItem(34, spawnLocation);
         inventory.setItem(40, naturalDrops);
         inventory.setItem(41, naturalSpawn);
@@ -205,7 +200,8 @@ public class InventoryStorage {
 
     public Inventory openPutContentInventory(PutType type) {
         Inventory inventory = Bukkit.createInventory(null, 9, type.getInvName());
-        fillInventoryWithoutOne(inventory);
+        if(type != PutType.DROPS)
+            fillInventoryWithoutOne(inventory);
         inventory.setItem(8, ItemCreator.getItem(Material.DIAMOND, "§6§lSet"));
         return inventory;
     }
@@ -466,7 +462,7 @@ public class InventoryStorage {
         return inventory;
     }
 
-    public Inventory counterInventory(CounterType counterType) {
+    public Inventory counterInventory(CounterType counterType, double value) {
         Inventory inventory = Bukkit.createInventory(null, 27, counterType.getInventoryName());
 
         fillInventory(inventory);
@@ -478,7 +474,7 @@ public class InventoryStorage {
             ItemStack plus0_1 = ItemCreator.getItem(Material.ARROW, "§e+0.1");
             ItemStack plus0_5 = ItemCreator.getItem(Material.ARROW, "§e+0.5");
             ItemStack plus1 = ItemCreator.getItem(Material.ARROW, "§e+1");
-            ItemStack ct = ItemCreator.getItem(Material.GOLD_NUGGET, counterType.getInventoryName() + ": §a§l" + counterType.getDefaultValue());
+            ItemStack ct = ItemCreator.getItem(Material.GOLD_NUGGET, counterType.getInventoryName() + ": §a§l" + (value == -1 ? counterType.getDefaultValue() : value));
 
             inventory.setItem(10, minus0_1);
             inventory.setItem(11, minus0_5);
@@ -496,7 +492,7 @@ public class InventoryStorage {
             ItemStack plus5 = ItemCreator.getItem(Material.ARROW, "§e+5");
             ItemStack plus10 = ItemCreator.getItem(Material.ARROW, "§e+10");
             ItemStack plus50 = ItemCreator.getItem(Material.ARROW, "§e+50");
-            ItemStack ct = ItemCreator.getItem(Material.GOLD_NUGGET, counterType.getInventoryName() + ": §a§l" + counterType.getDefaultValue());
+            ItemStack ct = ItemCreator.getItem(Material.GOLD_NUGGET, counterType.getInventoryName() + ": §a§l" + (value == -1 ? counterType.getDefaultValue() : value));
             inventory.setItem(9, minus1);
             inventory.setItem(10, minus5);
             inventory.setItem(11, minus10);
