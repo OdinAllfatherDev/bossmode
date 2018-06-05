@@ -269,7 +269,7 @@ public class CommandBoss extends ACommand {
                     return;
                 }
                 player.getInventory().addItem(boss.getBossEggItem());
-                player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.GET_EGG));
+                player.sendMessage(BossMode.PREFIX + "You get the egg");
 
             }
         }
