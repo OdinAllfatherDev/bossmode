@@ -7,6 +7,7 @@ import de.encryptdev.bossmode.boss.special.StompSpecialAttack;
 import de.encryptdev.bossmode.boss.special.TeleportSpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossManager;
 import de.encryptdev.bossmode.boss.util.BossUtil;
+import de.encryptdev.bossmode.lang.LanguageCode;
 import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -45,8 +46,8 @@ public class ListenerInventorySpecialAttack implements Listener {
             switch (itemName) {
                 case "§bMessages":
                     player.closeInventory();
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("messagesSpecialAttack"));
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("useColorCodes"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.MESSAGE_SPECIAL_ATTACK));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.USE_COLOR_CODES));
                     bossManager.getChatCommand().put(player, BossManager.CHAT_COMMAND_SPECIAL_ATTACK_MESSAGE);
                     break;
                 case "§5Teleport":

@@ -5,6 +5,7 @@ import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.boss.util.BossManager;
 import de.encryptdev.bossmode.boss.util.BossUtil;
+import de.encryptdev.bossmode.lang.LanguageCode;
 import de.encryptdev.bossmode.util.CheckNull;
 import de.encryptdev.bossmode.util.ItemCreator;
 import org.bukkit.Material;
@@ -77,13 +78,12 @@ public class ListenerInventoryBossSettings implements Listener {
                     IBoss boss = bossManager.getBossEditor(player).build();
                     bossManager.createBoss(boss,
                             bossManager.getEditBoss().contains(player));
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("createBoss"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.CREATE_BOSS));
                     bossManager.getBossEditor(player).setFinish(true);
                     bossManager.getPlayerBossEditor().remove(player);
                     bossManager.getEditors().remove(player);
                     bossManager.getPlayerSpawnerEditor().remove(player);
                     bossManager.getEditBoss().remove(player);
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
                     player.closeInventory();
                     new BukkitRunnable() {
 
@@ -111,8 +111,8 @@ public class ListenerInventoryBossSettings implements Listener {
                     break;
                 case "§eName":
                     player.closeInventory();
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("setNameClosedInventory"));
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("useColorCodes"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.SET_NAME_CLOSED_INVENTORY));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.USE_COLOR_CODES));
                     bossManager.getChatCommand().put(player, BossManager.CHAT_COMMAND_NAME);
                     break;
                 case "§aSpecial Attack":
@@ -120,7 +120,7 @@ public class ListenerInventoryBossSettings implements Listener {
                     break;
                 case "§bSpawn Location":
                     player.closeInventory();
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("spawnLocationClosedInventory"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.SPAWN_LOCATION_CLOSED_INVENTORY));
                     bossManager.getChatCommand().put(player, BossManager.CHAT_COMMAND_SPAWN_LOCATION);
                     break;
                 case "§aChance to spawn":

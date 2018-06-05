@@ -1,15 +1,14 @@
 package de.encryptdev.bossmode.boss;
 
 import de.encryptdev.bossmode.boss.mount.Mount;
-import de.encryptdev.bossmode.boss.path.BossPathfinderEdited;
 import de.encryptdev.bossmode.boss.special.SpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossSettings;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 
@@ -62,5 +61,6 @@ public interface IBoss {
 
     List<Player> getNearPlayers();
 
+    ItemStack getBossEggItem();
 
 }

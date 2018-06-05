@@ -1,6 +1,7 @@
 package de.encryptdev.bossmode.command;
 
 import de.encryptdev.bossmode.BossMode;
+import de.encryptdev.bossmode.lang.LanguageCode;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
@@ -15,10 +16,10 @@ public class CommandStats extends ACommand {
         if (!player.hasPermission("bossmode.stats") || !player.isOp() || !player.hasPermission("bossmode.*"))
             return;
         if (args.length == 0) {
-            player.sendMessage(BossMode.getInstance().getTranslatedMessage("statsHeader"));
-            player.sendMessage(BossMode.getInstance().getTranslatedMessage("statsLine").replace("%Kills%",
+            player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.STATS_HEADER));
+            player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.STATS_LINE).replace("%Kills%",
                     String.valueOf(BossMode.getInstance().getStorageModul().getUserData(player.getUniqueId().toString()).getKilledBosses())));
-            player.sendMessage(BossMode.getInstance().getTranslatedMessage("statsFooter"));
+            player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.STATS_FOOTER));
         }
     }
 

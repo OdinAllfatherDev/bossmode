@@ -11,11 +11,9 @@ import de.encryptdev.bossmode.boss.special.SpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossManager;
 import de.encryptdev.bossmode.boss.util.BossSettings;
 import de.encryptdev.bossmode.boss.util.BossUtil;
+import de.encryptdev.bossmode.ref.Reflection;
 import de.encryptdev.bossmode.util.BossBarV1_8;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
@@ -26,9 +24,12 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -71,22 +72,22 @@ public abstract class APIBoss implements IBoss {
 
     private void checkPlayers() {
         BossManager.TASK.put(this, Bukkit.getScheduler().runTaskTimerAsynchronously(BossMode.getInstance(), () -> {
-           try {
-               for (Entity ent : livingBossEntity.getNearbyEntities(getBossSettings().getNearbyRad(), getBossSettings().getNearbyRad(), getBossSettings().getNearbyRad())) {
-                   if (ent != null)
-                       if (ent instanceof Player) {
-                           if (nearbyPlayers.contains((Player) ent))
-                               continue;
-                           nearbyPlayers.add((Player) ent);
-                           if (BossUtil.is1_8())
-                               bossBar1_8.addPlayer((Player) ent);
-                           else
-                               bossBar.addPlayer((Player) ent);
-                       }
-               }
-           } catch(NoSuchElementException nsee) {
-               BossMode.getLog().log(Level.INFO, "[BossMode-LOG] Throw a NoSuchElementException. [Cached, no problem for the plugin :P]");
-           }
+            try {
+                for (Entity ent : livingBossEntity.getNearbyEntities(getBossSettings().getNearbyRad(), getBossSettings().getNearbyRad(), getBossSettings().getNearbyRad())) {
+                    if (ent != null)
+                        if (ent instanceof Player) {
+                            if (nearbyPlayers.contains((Player) ent))
+                                continue;
+                            nearbyPlayers.add((Player) ent);
+                            if (BossUtil.is1_8())
+                                bossBar1_8.addPlayer((Player) ent);
+                            else
+                                bossBar.addPlayer((Player) ent);
+                        }
+                }
+            } catch (NoSuchElementException nsee) {
+                BossMode.getLog().log(Level.INFO, "[BossMode-LOG] Throw a NoSuchElementException. [Cached, no problem for the plugin :P]");
+            }
 
             List<Player> copy = nearbyPlayers;
 
@@ -362,6 +363,25 @@ public abstract class APIBoss implements IBoss {
     @Override
     public List<Player> getNearPlayers() {
         return nearbyPlayers;
+    }
+
+    @Override
+    public ItemStack getBossEggItem() {
+        if (BossMode.getInstance().getNmsVersion() == Reflection.NMSVersion.V1_12_R1) {
+            ItemStack itemStack = new ItemStack(Material.MONSTER_EGG, 1, type.getTypeId());
+            SpawnEggMeta sem = (SpawnEggMeta) itemStack.getItemMeta();
+            sem.setSpawnedType(type);
+            sem.setDisplayName("§eEGG: " + name);
+            sem.setLore(Arrays.asList("§eID: " + getBossID()));
+            itemStack.setItemMeta(sem);
+            return itemStack.clone();
+        }
+        ItemStack itemStack = new ItemStack(Material.MONSTER_EGG, 1, type.getTypeId());
+        ItemMeta meta = itemStack.getItemMeta();
+        meta.setDisplayName("§eEGG: " + name);
+        meta.setLore(Arrays.asList("§eID: " + getBossID()));
+        itemStack.setItemMeta(meta);
+        return itemStack.clone();
     }
 
     @Override

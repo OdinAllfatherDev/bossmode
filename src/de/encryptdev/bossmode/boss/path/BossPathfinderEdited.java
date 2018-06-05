@@ -2,6 +2,7 @@ package de.encryptdev.bossmode.boss.path;
 
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.IBoss;
+import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.ref.Reflection;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -45,8 +46,7 @@ public class BossPathfinderEdited extends Reflection {
         goalSelector = getField(getNMSClass("EntityInsentient"), handleLivingEntity, "goalSelector");
         targetSelector = getField(getNMSClass("EntityInsentient"), handleLivingEntity, "targetSelector");
 
-        if (BossMode.getInstance().getNmsVersion() == NMSVersion.V1_8_R1 || BossMode.getInstance().getNmsVersion() == NMSVersion.V1_8_R2 ||
-                BossMode.getInstance().getNmsVersion() == NMSVersion.V1_8_R3) {
+        if (BossUtil.is1_8()) {
 
             List<Object> goalB = (List<Object>) getField(getNMSClass("PathfinderGoalSelector"), goalSelector, "b");
             List<Object> goalC = (List<Object>) getField(getNMSClass("PathfinderGoalSelector"), goalSelector, "b");
@@ -69,8 +69,8 @@ public class BossPathfinderEdited extends Reflection {
 
             if (nearAttackEntities.isEmpty()) {
                 if (handleLivingEntity.getClass().equals(getNMSClass("EntitySpider")) || handleLivingEntity.getClass().equals("EntityCaveSpider")) {
-                    goalSelectorR(2, pathfinderCreator.createPafhinderGoalMeleeAttackSpider(handleLivingEntity));
-                    targetSelectorR(2, pathfinderCreator.createPathfinderNearestAttackableTargetSpider(handleLivingEntity));
+                    goalSelectorR(2, pathfinderCreator.createPafhinderGoalMeleeAttackSpider(handleLivingEntity, getNMSClass("EntityHuman")));
+                    targetSelectorR(2, pathfinderCreator.createPathfinderNearestAttackableTargetSpider(handleLivingEntity, getNMSClass("EntityHuman")));
                 } else if (handleLivingEntity.getClass().equals(getNMSClass("EntitySkeleton")) && (iBoss.getBossSettings().getEquipment().getMainHand().getType()
                         == Material.BOW || iBoss.getBossSettings().getEquipment().getOffHand().getType() == Material.BOW))
                     goalSelectorR(2, pathfinderCreator.createPathfinderGoalArrowAttack(handleLivingEntity, iBoss.getBossSettings().getSpeed()));

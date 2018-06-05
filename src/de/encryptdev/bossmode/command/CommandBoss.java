@@ -6,6 +6,7 @@ import de.encryptdev.bossmode.boss.special.SpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossEquipment;
 import de.encryptdev.bossmode.boss.util.BossSettings;
 import de.encryptdev.bossmode.boss.util.BossUtil;
+import de.encryptdev.bossmode.lang.LanguageCode;
 import org.bukkit.Bukkit;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Entity;
@@ -39,12 +40,13 @@ public class CommandBoss extends ACommand {
             player.sendMessage(BossMode.PREFIX + "/boss spawn <id> - spawn a specific boss");
             player.sendMessage(BossMode.PREFIX + "/boss spawner <id> - get a spawner from the boss, if the spawner exist");
             player.sendMessage(BossMode.PREFIX + "/boss delete <id> - delete the boss");
+            player.sendMessage(BossMode.PREFIX + "/boss egg <id> - get a spawn egg for the boss");
             player.sendMessage(BossMode.PREFIX + "/bmstats - show your own stats");
             player.sendMessage(BossMode.PREFIX + "I hope you have fun! ;)");
         } else if (args.length == 1) {
             if (args[0].equalsIgnoreCase("editor")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player)) {
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("alreadyInEditorMode"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.ALREADY_IN_EDITOR_MODE));
                     return;
                 }
                 player.openInventory(BossMode.getInstance().getInventoryStorage().newOrEditBoss());
@@ -80,7 +82,7 @@ public class CommandBoss extends ACommand {
                             }
                 }
 
-                player.sendMessage(BossMode.getInstance().getTranslatedMessage("killAllBosses").replace("%Amount%", String.valueOf(i)));
+                player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.KILL_ALL_BOSSES).replace("%Amount%", String.valueOf(i)));
             }
         } else if (args.length == 2) {
             if (args[0].equalsIgnoreCase("spawn")) {
@@ -93,10 +95,6 @@ public class CommandBoss extends ACommand {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     return;
                 }
-                if(id == -1) {
-                    player.sendMessage(BossMode.PREFIX + "ID is -1, please contact me");
-                    return;
-                }
 
 
                 List<Player> all = new LinkedList<>();
@@ -106,7 +104,7 @@ public class CommandBoss extends ACommand {
 
                 IBoss iBoss = BossMode.getInstance().getBossManager().getBoss(id);
                 if (iBoss == null) {
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("bossNotExist").replace("%id%", String.valueOf(id)));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.BOSS_NOT_EXIST).replace("%id%", String.valueOf(id)));
                     return;
                 }
 
@@ -122,24 +120,21 @@ public class CommandBoss extends ACommand {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     return;
                 }
-                if(id == -1) {
-                    player.sendMessage(BossMode.PREFIX + "ID is -1, please contact me");
-                    return;
-                }
+
 
                 IBoss iBoss = BossMode.getInstance().getBossManager().getBoss(id);
                 if (iBoss == null) {
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("bossNotExist").replace("%id%", String.valueOf(id)));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.BOSS_NOT_EXIST).replace("%id%", String.valueOf(id)));
                     return;
                 }
                 if (!iBoss.hasSpawner()) {
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("spawnerItemNull"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.SPAWNER_ITEM_NULL));
                     return;
                 }
                 ItemStack spawner = BossMode.getInstance().getBossManager().getSpawner(iBoss.getBossID());
 
                 player.getInventory().addItem(spawner);
-                player.sendMessage(BossMode.getInstance().getTranslatedMessage("getSpawner"));
+                player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.GET_SPAWNER));
 
             } else if (args[0].equalsIgnoreCase("kill")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player))
@@ -151,12 +146,8 @@ public class CommandBoss extends ACommand {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     return;
                 }
-                if(id == -1) {
-                    player.sendMessage(BossMode.PREFIX + "ID is -1, please contact me");
-                    return;
-                }
                 if (BossMode.getInstance().getBossManager().getBoss(id) == null) {
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("bossNotExist").replace("%id%", String.valueOf(id)));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.BOSS_NOT_EXIST).replace("%id%", String.valueOf(id)));
                     return;
                 }
 
@@ -173,7 +164,7 @@ public class CommandBoss extends ACommand {
                             }
                 }
 
-                player.sendMessage(BossMode.getInstance().getTranslatedMessage("killBoss").replace("%Amount%", String.valueOf(i)));
+                player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.KILL_ALL_BOSSES).replace("%Amount%", String.valueOf(i)));
 
             } else if (args[0].equalsIgnoreCase("info")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player))
@@ -185,15 +176,11 @@ public class CommandBoss extends ACommand {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     return;
                 }
-                if(id == -1) {
-                    player.sendMessage(BossMode.PREFIX + "ID is -1, please contact me");
-                    return;
-                }
 
                 IBoss boss = BossMode.getInstance().getBossManager().getBoss(id);
 
                 if (boss == null) {
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("bossNotExist").replace("%id%", String.valueOf(id)));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.BOSS_NOT_EXIST).replace("%id%", String.valueOf(id)));
                     return;
                 }
 
@@ -243,31 +230,46 @@ public class CommandBoss extends ACommand {
             } else if (args[0].equalsIgnoreCase("delete")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player))
                     BossMode.getInstance().getBossManager().getEditors().remove(player);
-                int id = -1;
+                int id;
                 try {
                     id = Integer.parseInt(args[1]);
                 } catch(NumberFormatException nfe) {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     return;
                 }
-                if(id == -1) {
-                    player.sendMessage(BossMode.PREFIX + "ID is -1, please contact me");
-                    return;
-                }
 
                 IBoss boss = BossMode.getInstance().getBossManager().getBoss(id);
 
                 if (boss == null) {
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("bossNotExist").replace("%id%", String.valueOf(id)));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.BOSS_NOT_EXIST).replace("%id%", String.valueOf(id)));
                     return;
                 }
 
                 boolean result = BossMode.getInstance().getBossManager().deleteBoss(boss);
                 if (result) {
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("deleteBossSuccessful"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.DELETE_BOSS_SUCCESSFUL));
                 } else {
                     player.sendMessage(BossMode.PREFIX + "Boss file not deleted");
                 }
+
+            } else if(args[0].equalsIgnoreCase("egg")) {
+                if (BossMode.getInstance().getBossManager().getEditors().contains(player))
+                    BossMode.getInstance().getBossManager().getEditors().remove(player);
+                int id;
+                try {
+                    id = Integer.parseInt(args[1]);
+                } catch(NumberFormatException nfe) {
+                    player.sendMessage(BossMode.PREFIX + "It must be a number");
+                    return;
+                }
+                IBoss boss = BossMode.getInstance().getBossManager().getBoss(id);
+
+                if (boss == null) {
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.BOSS_NOT_EXIST).replace("%id%", String.valueOf(id)));
+                    return;
+                }
+                player.getInventory().addItem(boss.getBossEggItem());
+                player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.GET_EGG));
 
             }
         }

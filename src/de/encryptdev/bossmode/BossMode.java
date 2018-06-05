@@ -9,6 +9,7 @@ import de.encryptdev.bossmode.listener.ListenerPlayerDamageByBoss;
 import de.encryptdev.bossmode.listener.ListenerSpawner;
 import de.encryptdev.bossmode.listener.boss.*;
 import de.encryptdev.bossmode.listener.inventory.*;
+import de.encryptdev.bossmode.lang.LanguageManager;
 import de.encryptdev.bossmode.ref.NBTSpawnerUtil;
 import de.encryptdev.bossmode.ref.Reflection;
 import de.encryptdev.bossmode.storage.FileStorage;
@@ -16,9 +17,7 @@ import de.encryptdev.bossmode.storage.SQLDBStorage;
 import de.encryptdev.bossmode.storage.StorageModule;
 import de.encryptdev.bossmode.storage.UserData;
 import de.encryptdev.bossmode.util.BMFileManager;
-import de.encryptdev.bossmode.util.MessageSystem;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -40,7 +39,6 @@ public class BossMode extends JavaPlugin {
 
     private static BossMode instance;
 
-    private MessageSystem messageSystem;
     private BMFileManager bossIdFile;
     private BossManager bossManager;
     private Reflection.NMSVersion nmsVersion;
@@ -48,6 +46,7 @@ public class BossMode extends JavaPlugin {
     private NBTSpawnerUtil nbtSpawnerUtil;
     private InventoryStorage inventoryStorage;
     private StorageModule<UserData> storageModul;
+    private LanguageManager languageManager;
 
     @Override
     public void onEnable() {
@@ -65,8 +64,7 @@ public class BossMode extends JavaPlugin {
             log.log(Level.INFO, "[BossMode-LOG] You play on version 1.8, the class BossBarV1_8 is used");
         }
 
-        this.messageSystem = new MessageSystem();
-        this.messageSystem.loadDefaultMessages();
+        this.languageManager = new LanguageManager(this);
         this.updateChecker = new UpdateChecker();
         this.inventoryStorage = new InventoryStorage();
         this.nbtSpawnerUtil = new NBTSpawnerUtil();
@@ -88,7 +86,7 @@ public class BossMode extends JavaPlugin {
             storageModul = new FileStorage();
             storageModul.init();
         } else if (storage.equalsIgnoreCase("sql")) {
-            if(getServer().getPluginManager().getPlugin("BMSQLAddon") == null) {
+            if (getServer().getPluginManager().getPlugin("BMSQLAddon") == null) {
                 log.log(Level.INFO, "[BossMode-LOG] SQL Addon is not installed. Please install the SQL Addon or change the save mode to 'file'");
                 return;
             }
@@ -96,7 +94,7 @@ public class BossMode extends JavaPlugin {
 
                 @Override
                 public void run() {
-                    if(getServer().getPluginManager().getPlugin("BMSQLAddon").isEnabled()) {
+                    if (getServer().getPluginManager().getPlugin("BMSQLAddon").isEnabled()) {
                         cancel();
                         storageModul = new SQLDBStorage();
                         storageModul.init();
@@ -131,6 +129,7 @@ public class BossMode extends JavaPlugin {
         getConfig().addDefault("bossId", 0);
         getConfig().addDefault("livingBossId", 0);
         getConfig().addDefault("storage", "file");
+        getConfig().addDefault("lang", "en_US");
         getConfig().addDefault("bossSpawnByChunkLoading", true);
         getConfig().addDefault("specialAttackTicks", 400);
         getConfig().addDefault("spawnByStartNatural", true);
@@ -192,8 +191,8 @@ public class BossMode extends JavaPlugin {
         return bossIdFile;
     }
 
-    public String getTranslatedMessage(String path) {
-        return ChatColor.translateAlternateColorCodes('&', this.messageSystem.getMessage(path));
+    public String getTranslatedMessage(String code) {
+        return languageManager.getTranslatedMessage(code);
     }
 
     public StorageModule<UserData> getStorageModul() {

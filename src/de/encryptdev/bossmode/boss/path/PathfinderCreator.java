@@ -59,6 +59,12 @@ public class PathfinderCreator extends Reflection {
         return getNewInstanceConstructor(getNMSClass("EntitySpider$PathfinderGoalSpiderMeleeAttack"), new Class<?>[]{entitySpider.getClass()}, new Object[]{entitySpider});
     }
 
+    public Object createPafhinderGoalMeleeAttackSpider(Object entitySpider, Class<?> targetClass) {
+        return getNewInstanceConstructor(getNMSClass("EntitySpider$PathfinderGoalSpiderMeleeAttack"), new Class<?>[]{entitySpider.getClass(), Class.class},
+                new Object[]{entitySpider, targetClass});
+    }
+
+
     public Object createPathfinderGoalMoveTowardsRestriction(Object entityCreature) {
         return getNewInstanceConstructor(getNMSClass("PathfinderGoalMoveTowardsRestriction"), new Class<?>[]{entityCreatureClass, double.class},
                 new Object[]{entityCreature, 1.0D});
@@ -67,6 +73,11 @@ public class PathfinderCreator extends Reflection {
     public Object createPathfinderNearestAttackableTargetSpider(Object entitySpider) {
         return getNewInstanceConstructor(getNMSClass("PathfinderGoalSpiderNearestAttackableTarget"), new Class<?>[]{entitySpider.getClass(), Class.class},
                 new Object[]{entitySpider, getNMSClass("EntityHuman")});
+    }
+
+    public Object createPathfinderNearestAttackableTargetSpider(Object entitySpider, Class<?> targetClass) {
+        return getNewInstanceConstructor(getNMSClass("PathfinderGoalSpiderNearestAttackableTarget"), new Class<?>[]{entitySpider.getClass(), Class.class},
+                new Object[]{entitySpider, targetClass});
     }
 
     public Object createPathfinderGoalRandomStrollLand(Object entityCreature) {

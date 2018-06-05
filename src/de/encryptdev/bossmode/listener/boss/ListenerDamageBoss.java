@@ -39,8 +39,7 @@ public class ListenerDamageBoss implements Listener {
         if(event.getEntity() instanceof  LivingEntity && !(event.getEntity() instanceof ArmorStand) &&
                 (event.getCause().equals(EntityDamageEvent.DamageCause.LAVA) || event.getCause().equals(EntityDamageEvent.DamageCause.FIRE) ||
                 event.getCause().equals(EntityDamageEvent.DamageCause.FALL) || event.getCause().equals(EntityDamageEvent.DamageCause.FIRE_TICK) ||
-                event.getCause().equals(EntityDamageEvent.DamageCause.DROWNING) ||
-                event.getCause().equals(EntityDamageEvent.DamageCause.FLY_INTO_WALL))) {
+                event.getCause().equals(EntityDamageEvent.DamageCause.DROWNING))) {
             LivingEntity le = (LivingEntity) event.getEntity();
             if (le.hasMetadata(BossSettings.META_DATA_BOSS_LIVING_ID)) {
                 int id = le.getMetadata(BossSettings.META_DATA_BOSS_LIVING_ID).get(0).asInt();

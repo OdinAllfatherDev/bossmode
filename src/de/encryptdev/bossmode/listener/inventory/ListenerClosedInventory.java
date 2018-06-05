@@ -3,6 +3,7 @@ package de.encryptdev.bossmode.listener.inventory;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.util.BossEditor;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.lang.LanguageCode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +36,7 @@ public class ListenerClosedInventory implements Listener {
                             bossManager.getPlayerBossEditor().remove(player);
                             bossManager.getEditors().remove(player);
                             bossManager.getEditBoss().remove(player);
-                            player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
+                            player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.LEFT_EDITOR_MODE_WITHOUT_SAVE));
                         }
                     }
                 }
@@ -49,7 +50,7 @@ public class ListenerClosedInventory implements Listener {
                         if (player.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting")) {
                             bossManager.getPlayerSpawnerEditor().remove(player);
                             bossManager.getEditors().remove(player);
-                            player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
+                            player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.LEFT_EDITOR_MODE_WITHOUT_SAVE));
                         }
                     }
                 }
@@ -62,7 +63,7 @@ public class ListenerClosedInventory implements Listener {
                 public void run() {
                     if (player.getOpenInventory().getTopInventory().getName().equalsIgnoreCase("container.crafting")) {
                         bossManager.getEditors().remove(player);
-                        player.sendMessage(BossMode.getInstance().getTranslatedMessage("leftEditorModeWithoutSave"));
+                        player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.LEFT_EDITOR_MODE_WITHOUT_SAVE));
                     }
                 }
             }.runTaskLater(BossMode.getInstance(), 10);

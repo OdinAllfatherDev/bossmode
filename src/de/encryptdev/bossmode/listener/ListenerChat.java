@@ -4,6 +4,7 @@ import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.boss.special.MessageSpecialAttack;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.lang.LanguageCode;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -39,7 +40,7 @@ public class ListenerChat implements Listener {
             if (cc.equals(BossManager.CHAT_COMMAND_SPAWN_LOCATION) && event.getMessage().equalsIgnoreCase("#finish")) {
                 bossManager.getBossEditor(player)
                         .setSpawnLocation(player.getLocation());
-                player.sendMessage(BossMode.getInstance().getTranslatedMessage("setSpawnLocation"));
+                player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.SET_SPAWN_LOCATION));
                 player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(BossMode.getInstance()
                         .getBossManager().getBossEditor(player).isNaturalSpawn()));
                 bossManager.getChatCommand().remove(player);
@@ -85,7 +86,7 @@ public class ListenerChat implements Listener {
                     specialAttackMesasges.remove(player);
                     specialAttackMesasges.put(player, ml);
                 }
-                player.sendMessage(BossMode.getInstance().getTranslatedMessage("addMessageSpecialAttack"));
+                player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.ADD_MESSAGE_SPECIAL_ATTACK));
 
             } else if (cc.equals(BossManager.CHAT_COMMAND_SPAWNER)) {
                 int i = parseInt(event.getMessage().replace(",", "."));
@@ -97,7 +98,7 @@ public class ListenerChat implements Listener {
 
                 IBoss iBoss = bossManager.getBoss(i);
                 if (iBoss == null) {
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("bossNotExist"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.BOSS_NOT_EXIST));
                     return;
                 }
 

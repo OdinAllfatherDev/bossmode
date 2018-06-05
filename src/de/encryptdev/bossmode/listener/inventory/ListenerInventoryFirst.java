@@ -3,6 +3,7 @@ package de.encryptdev.bossmode.listener.inventory;
 import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.boss.IBoss;
 import de.encryptdev.bossmode.boss.util.BossManager;
+import de.encryptdev.bossmode.lang.LanguageCode;
 import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -47,7 +48,7 @@ public class ListenerInventoryFirst implements Listener {
                     player.closeInventory();
 
                     if (bossManager.getBosses().isEmpty()) {
-                        player.sendMessage(BossMode.getInstance().getTranslatedMessage("emptyBossList"));
+                        player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.EMPTY_BOSS_LIST));
                         return;
                     }
 
@@ -59,7 +60,7 @@ public class ListenerInventoryFirst implements Listener {
                         player.sendMessage(allBosses.get(i).getBossName() + " §a| ID: §4" + allBosses.get(i).getBossID());
 
                     player.sendMessage("§7-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("writeIdNow"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.WRITE_ID_NOW));
                     bossManager.getEditors().add(player);
                     bossManager.getChatCommand().put(player, BossManager.CHAT_COMMAND_SPAWNER);
                     break;
@@ -67,7 +68,7 @@ public class ListenerInventoryFirst implements Listener {
                     player.closeInventory();
 
                     if (bossManager.getBosses().isEmpty()) {
-                        player.sendMessage(BossMode.getInstance().getTranslatedMessage("emptyBossList"));
+                        player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.EMPTY_BOSS_LIST));
                         return;
                     }
 
@@ -79,7 +80,7 @@ public class ListenerInventoryFirst implements Listener {
                         player.sendMessage(allBosses0.get(i).getBossName() + " §a| ID: §4" + allBosses0.get(i).getBossID());
 
                     player.sendMessage("§7-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-");
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("writeIdNow"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.WRITE_ID_NOW));
                     bossManager.getEditBoss().add(player);
                     bossManager.getEditors().add(player);
                     bossManager.getChatCommand().put(player, BossManager.CHAT_COMMAND_EDIT_BOSS);

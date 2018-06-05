@@ -4,6 +4,7 @@ import de.encryptdev.bossmode.BossMode;
 import de.encryptdev.bossmode.InventoryStorage;
 import de.encryptdev.bossmode.boss.util.BossManager;
 import de.encryptdev.bossmode.boss.util.BossUtil;
+import de.encryptdev.bossmode.lang.LanguageCode;
 import de.encryptdev.bossmode.util.CheckNull;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -71,7 +72,7 @@ public class ListenerInventorySpawnerSettings implements Listener {
                 case "§eFinish":
                     ItemStack itemStack0 = bossManager.createSpawner(bossManager.getSpawnerEditor(player));
                     player.getInventory().addItem(itemStack0);
-                    player.sendMessage(BossMode.getInstance().getTranslatedMessage("buildSpawner"));
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.BUILD_SPAWNER));
                     bossManager.getPlayerSpawnerEditor().remove(player);
                     bossManager.getEditors().remove(player);
                     player.closeInventory();
