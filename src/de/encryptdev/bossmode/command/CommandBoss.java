@@ -24,8 +24,10 @@ public class CommandBoss extends ACommand {
 
     @Override
     public void playerCommand(Player player, String[] args) {
-        if (!player.hasPermission("bossmode.admin") || !player.hasPermission("bossmode.*") || !player.isOp())
+        if (!player.hasPermission("bossmode.admin") || !player.hasPermission("bossmode.*") || !player.isOp()) {
+            player.sendMessage(BossMode.PREFIX + "You doesn't have the permission for this command");
             return;
+        }
 
         if (args.length == 0) {
             player.sendMessage("                           §4§lBOSSMODE       ");
