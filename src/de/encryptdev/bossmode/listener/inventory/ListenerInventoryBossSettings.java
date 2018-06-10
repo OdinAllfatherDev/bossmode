@@ -84,6 +84,7 @@ public class ListenerInventoryBossSettings implements Listener {
                     bossManager.getEditors().remove(player);
                     bossManager.getPlayerSpawnerEditor().remove(player);
                     bossManager.getEditBoss().remove(player);
+                    player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.FINISH_EDITOR_MODE));
                     player.closeInventory();
                     new BukkitRunnable() {
 

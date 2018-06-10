@@ -4,12 +4,12 @@ import de.encryptdev.bossmode.boss.util.BossManager;
 import de.encryptdev.bossmode.boss.util.BossUtil;
 import de.encryptdev.bossmode.command.CommandBoss;
 import de.encryptdev.bossmode.command.CommandStats;
+import de.encryptdev.bossmode.lang.MessageManager;
 import de.encryptdev.bossmode.listener.ListenerChat;
 import de.encryptdev.bossmode.listener.ListenerPlayerDamageByBoss;
 import de.encryptdev.bossmode.listener.ListenerSpawner;
 import de.encryptdev.bossmode.listener.boss.*;
 import de.encryptdev.bossmode.listener.inventory.*;
-import de.encryptdev.bossmode.lang.LanguageManager;
 import de.encryptdev.bossmode.ref.NBTSpawnerUtil;
 import de.encryptdev.bossmode.ref.Reflection;
 import de.encryptdev.bossmode.storage.FileStorage;
@@ -18,6 +18,7 @@ import de.encryptdev.bossmode.storage.StorageModule;
 import de.encryptdev.bossmode.storage.UserData;
 import de.encryptdev.bossmode.util.BMFileManager;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -46,7 +47,7 @@ public class BossMode extends JavaPlugin {
     private NBTSpawnerUtil nbtSpawnerUtil;
     private InventoryStorage inventoryStorage;
     private StorageModule<UserData> storageModul;
-    private LanguageManager languageManager;
+    private MessageManager messageManager;
 
     @Override
     public void onEnable() {
@@ -64,7 +65,8 @@ public class BossMode extends JavaPlugin {
             log.log(Level.INFO, "[BossMode-LOG] You play on version 1.8, the class BossBarV1_8 is used");
         }
 
-        this.languageManager = new LanguageManager(this);
+        this.messageManager = new MessageManager();
+        this.messageManager.loadMessages();
         this.updateChecker = new UpdateChecker();
         this.inventoryStorage = new InventoryStorage();
         this.nbtSpawnerUtil = new NBTSpawnerUtil();
@@ -192,7 +194,7 @@ public class BossMode extends JavaPlugin {
     }
 
     public String getTranslatedMessage(String code) {
-        return languageManager.getTranslatedMessage(code);
+        return ChatColor.translateAlternateColorCodes('&', messageManager.getMessage(code));
     }
 
     public StorageModule<UserData> getStorageModul() {

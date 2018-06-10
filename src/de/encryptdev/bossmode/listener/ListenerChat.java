@@ -111,7 +111,7 @@ public class ListenerChat implements Listener {
                     player.sendMessage(BossMode.PREFIX + "The name length must between 0 and 16 characters");
                     return;
                 }
-
+                player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.SET_NAME));
                 bossManager.getBossEditor(player).setName(ChatColor.translateAlternateColorCodes('&', name));
                 bossManager.getChatCommand().remove(player);
                 player.openInventory(BossMode.getInstance().getInventoryStorage().bossSettings(bossManager.getBossEditor(player).isNaturalSpawn()));

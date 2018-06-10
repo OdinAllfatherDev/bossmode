@@ -22,7 +22,6 @@ public class LanguageCode {
     public static final String MESSAGE_SPECIAL_ATTACK = "messagesSpecialAttack";
     public static final String EMPTY_BOSS_LIST = "emptyBossList";
     public static final String BUILD_SPAWNER = "buildSpawner";
-    public static final String KILL_BOSS = "killBoss";
     public static final String KILL_ALL_BOSSES = "killAllBosses";
     public static final String DELETE_BOSS_SUCCESSFUL = "deleteBossSuccessful";
     public static final String STATS_HEADER = "statsHeader";

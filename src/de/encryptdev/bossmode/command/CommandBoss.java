@@ -93,7 +93,7 @@ public class CommandBoss extends ACommand {
                 int id = -1;
                 try {
                     id = Integer.parseInt(args[1]);
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     return;
                 }
@@ -118,7 +118,7 @@ public class CommandBoss extends ACommand {
                 int id = -1;
                 try {
                     id = Integer.parseInt(args[1]);
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     return;
                 }
@@ -144,7 +144,7 @@ public class CommandBoss extends ACommand {
                 int id = -1;
                 try {
                     id = Integer.parseInt(args[1]);
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     return;
                 }
@@ -174,7 +174,7 @@ public class CommandBoss extends ACommand {
                 int id = -1;
                 try {
                     id = Integer.parseInt(args[1]);
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     return;
                 }
@@ -235,7 +235,7 @@ public class CommandBoss extends ACommand {
                 int id;
                 try {
                     id = Integer.parseInt(args[1]);
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     return;
                 }
@@ -254,13 +254,13 @@ public class CommandBoss extends ACommand {
                     player.sendMessage(BossMode.PREFIX + "Boss file not deleted");
                 }
 
-            } else if(args[0].equalsIgnoreCase("egg")) {
+            } else if (args[0].equalsIgnoreCase("egg")) {
                 if (BossMode.getInstance().getBossManager().getEditors().contains(player))
                     BossMode.getInstance().getBossManager().getEditors().remove(player);
                 int id;
                 try {
                     id = Integer.parseInt(args[1]);
-                } catch(NumberFormatException nfe) {
+                } catch (NumberFormatException nfe) {
                     player.sendMessage(BossMode.PREFIX + "It must be a number");
                     return;
                 }
@@ -271,7 +271,7 @@ public class CommandBoss extends ACommand {
                     return;
                 }
                 player.getInventory().addItem(boss.getBossEggItem());
-                player.sendMessage(BossMode.PREFIX + "You get the egg");
+                player.sendMessage(BossMode.getInstance().getTranslatedMessage(LanguageCode.GET_EGG));
 
             }
         }
